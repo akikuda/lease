@@ -4,4 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.admin.mapper.AttrKeyMapper">
 
+    <resultMap id="AttrKeyVoMap" type="com.toki.web.admin.vo.attr.AttrKeyVo">
+        <id property="id" column="id"/>
+        <result property="name" column="key_name"/>
+        <collection property="attrValueList" ofType="com.toki.model.entity.AttrValue">
+            <id column="value_id" property="id"/>
+            <result column="value_name" property="name"/>
+            <result column="key_id" property="attrKeyId"/>
+        </collection>
+    </resultMap>
+
+    <!-- 多表联查
+     1. 查询结果要能转为AttrKeyVO，需要手动写ResultMap映射结果;
+     2. 逻辑删除，左外连接，以左边的逻辑删除字段ak.is_deleted为准
+     -->
+    <select id="listAttrInfo" resultMap="AttrKeyVoMap">
+        select ak.id,
+               ak.name        key_name,
+               av.id          value_id,
+               av.name        value_name,
+               av.attr_key_id key_id
+        from attr_key ak
+                 left join attr_value av on ak.id = av.attr_key_id and av.is_deleted = 0
+        where ak.is_deleted = 0
+    </select>
 </mapper>

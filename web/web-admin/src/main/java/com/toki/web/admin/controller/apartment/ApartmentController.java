@@ -11,6 +11,7 @@ import com.toki.web.admin.vo.apartment.ApartmentSubmitVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @Tag(name = "公寓信息管理")
 @RestController
 @RequestMapping("/admin/apartment")
+@RequiredArgsConstructor
 public class ApartmentController {
 
     @Operation(summary = "保存或更新公寓信息")

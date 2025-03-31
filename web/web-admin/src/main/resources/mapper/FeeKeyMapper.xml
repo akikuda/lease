@@ -4,4 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.admin.mapper.FeeKeyMapper">
 
+    <resultMap id="FeeKeyVoMap" type="com.toki.web.admin.vo.fee.FeeKeyVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="feeValueList" ofType="com.toki.model.entity.FeeValue" autoMapping="true">
+            <id column="vid" property="id"/>
+            <result column="vname" property="name"/>
+            <result column="kid" property="feeKeyId"/>
+        </collection>
+    </resultMap>
+
+    <select id="feeInfoList" resultMap="FeeKeyVoMap">
+        select fk.id,
+               fk.name,
+               fv.id         vid,
+               fv.name       vname,
+               fv.unit,
+               fv.fee_key_id kid
+        from fee_key fk
+                 left join fee_value fv on fk.id = fv.fee_key_id and fv.is_deleted = 0
+        where fk.is_deleted = 0
+    </select>
 </mapper>

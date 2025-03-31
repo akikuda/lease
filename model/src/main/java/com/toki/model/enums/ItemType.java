@@ -11,7 +11,9 @@ public enum ItemType implements BaseEnum {
     ROOM(2, "房间");
 
 
+    // 在请求时，指定本对象与code属性相互映射
     @EnumValue
+    // 在响应返回时，指定本对象与code属性相互映射
     @JsonValue
     private Integer code;
     private String name;
