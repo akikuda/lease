@@ -9,6 +9,9 @@ import lombok.Data;
 import java.util.List;
 
 
+/**
+ * @author toki
+ */
 @Schema(description = "公寓信息")
 @Data
 public class ApartmentSubmitVo extends ApartmentInfo {

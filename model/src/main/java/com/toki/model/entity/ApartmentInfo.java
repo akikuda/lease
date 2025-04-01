@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Schema(description = "公寓信息表")
 @TableName(value = "apartment_info")
 @Data

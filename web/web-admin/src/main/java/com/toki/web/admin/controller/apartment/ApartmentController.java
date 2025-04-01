@@ -1,9 +1,11 @@
 package com.toki.web.admin.controller.apartment;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.common.result.Result;
 import com.toki.model.entity.ApartmentInfo;
 import com.toki.model.enums.ReleaseStatus;
+import com.toki.web.admin.service.ApartmentInfoService;
 import com.toki.web.admin.vo.apartment.ApartmentDetailVo;
 import com.toki.web.admin.vo.apartment.ApartmentItemVo;
 import com.toki.web.admin.vo.apartment.ApartmentQueryVo;
@@ -17,22 +19,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+/**
+ * @author toki
+ */
 @Tag(name = "公寓信息管理")
 @RestController
 @RequestMapping("/admin/apartment")
 @RequiredArgsConstructor
 public class ApartmentController {
 
+    private final ApartmentInfoService InfoService;
+
     @Operation(summary = "保存或更新公寓信息")
     @PostMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody ApartmentSubmitVo apartmentSubmitVo) {
+        InfoService.saveOrUpdateApartment(apartmentSubmitVo);
         return Result.ok();
     }
 
     @Operation(summary = "根据条件分页查询公寓列表")
     @GetMapping("pageItem")
     public Result<IPage<ApartmentItemVo>> pageItem(@RequestParam long current, @RequestParam long size, ApartmentQueryVo queryVo) {
-        return Result.ok();
+        final Page<ApartmentItemVo> page = new Page<>(current, size);
+        IPage<ApartmentItemVo> result = InfoService.pageItem(page, queryVo);
+        return Result.ok(result);
     }
 
     @Operation(summary = "根据ID获取公寓详细信息")

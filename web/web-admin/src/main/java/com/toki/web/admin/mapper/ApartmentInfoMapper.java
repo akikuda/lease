@@ -1,7 +1,11 @@
 package com.toki.web.admin.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.model.entity.ApartmentInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.toki.web.admin.vo.apartment.ApartmentItemVo;
+import com.toki.web.admin.vo.apartment.ApartmentQueryVo;
 
 /**
  * @author toki
@@ -9,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
+    IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo);
 }
 
 
