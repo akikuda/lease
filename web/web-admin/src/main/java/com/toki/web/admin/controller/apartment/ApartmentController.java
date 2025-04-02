@@ -1,6 +1,8 @@
 package com.toki.web.admin.controller.apartment;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.common.result.Result;
 import com.toki.model.entity.ApartmentInfo;
@@ -48,25 +50,38 @@ public class ApartmentController {
     @Operation(summary = "根据ID获取公寓详细信息")
     @GetMapping("getDetailById")
     public Result<ApartmentDetailVo> getDetailById(@RequestParam Long id) {
-        return Result.ok();
+        ApartmentDetailVo apartmentDetailVo = InfoService.getApartmentDetailById(id);
+        return Result.ok(apartmentDetailVo);
     }
 
     @Operation(summary = "根据id删除公寓信息")
     @DeleteMapping("removeById")
     public Result removeById(@RequestParam Long id) {
+        InfoService.removeApartmentById(id);
         return Result.ok();
     }
 
     @Operation(summary = "根据id修改公寓发布状态")
     @PostMapping("updateReleaseStatusById")
     public Result updateReleaseStatusById(@RequestParam Long id, @RequestParam ReleaseStatus status) {
-        return Result.ok();
+        return Result.ok(
+                InfoService.update(
+                        new LambdaUpdateWrapper<>(ApartmentInfo.class)
+                                .eq(ApartmentInfo::getId, id)
+                                .set(ApartmentInfo::getIsRelease, status)
+                )
+        );
     }
 
     @Operation(summary = "根据区县id查询公寓信息列表")
     @GetMapping("listInfoByDistrictId")
     public Result<List<ApartmentInfo>> listInfoByDistrictId(@RequestParam Long id) {
-        return Result.ok();
+        return Result.ok(
+                InfoService.list(
+                        new LambdaQueryWrapper<>(ApartmentInfo.class)
+                                .eq(ApartmentInfo::getDistrictId, id)
+                )
+        );
     }
 }
 

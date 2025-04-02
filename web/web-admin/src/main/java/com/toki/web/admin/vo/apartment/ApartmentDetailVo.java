@@ -7,12 +7,17 @@ import com.toki.model.entity.LabelInfo;
 import com.toki.web.admin.vo.graph.GraphVo;
 import com.toki.web.admin.vo.fee.FeeValueVo;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author toki
+ */
 @Schema(description = "公寓信息")
 @Data
+@Builder
 public class ApartmentDetailVo extends ApartmentInfo {
 
     @Schema(description = "图片列表")

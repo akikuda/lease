@@ -13,6 +13,9 @@ import com.toki.web.admin.vo.apartment.ApartmentQueryVo;
  */
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
+    /**
+     * 分页查询，虽涉及多张表，但结果为集合，更适合自定义sql
+     * */
     IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo);
 }
 

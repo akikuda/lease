@@ -5,14 +5,18 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.toki.common.exception.LeaseException;
+import com.toki.common.result.ResultCodeEnum;
 import com.toki.model.entity.*;
 import com.toki.model.enums.ItemType;
-import com.toki.web.admin.mapper.ApartmentInfoMapper;
+import com.toki.web.admin.mapper.*;
 import com.toki.web.admin.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.toki.web.admin.vo.apartment.ApartmentDetailVo;
 import com.toki.web.admin.vo.apartment.ApartmentItemVo;
 import com.toki.web.admin.vo.apartment.ApartmentQueryVo;
 import com.toki.web.admin.vo.apartment.ApartmentSubmitVo;
+import com.toki.web.admin.vo.fee.FeeValueVo;
 import com.toki.web.admin.vo.graph.GraphVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,12 +33,20 @@ import java.util.List;
 public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, ApartmentInfo>
         implements ApartmentInfoService {
 
+    // 单表的用对应的Service即可
     private final GraphInfoService graphInfoService;
     private final ApartmentFacilityService apartmentFacilityService;
     private final ApartmentLabelService apartmentLabelService;
     private final ApartmentFeeValueService apartmentFeeValueService;
+    private final RoomInfoService roomInfoService;
 
+    // 涉及多表的，用对应的Mapper,自写sql
     private final ApartmentInfoMapper apartmentInfoMapper;
+    private final GraphInfoMapper graphInfoMapper;
+    private final LabelInfoMapper labelInfoMapper;
+    private final FeeKeyMapper feeKeyMapper;
+    private final FeeValueMapper feeValueMapper;
+    private final FacilityInfoMapper facilityInfoMapper;
 
     /**
      * <p>
@@ -142,6 +154,69 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     @Override
     public IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> page, ApartmentQueryVo queryVo) {
         return apartmentInfoMapper.pageItem(page, queryVo);
+    }
+
+    /**
+     * 涉及多张表，但结果为单个对象，适合分别查询，然后用代码统一组装结果
+     *
+     * @param id 公寓id
+     */
+    @Override
+    public ApartmentDetailVo getApartmentDetailById(Long id) {
+        // 1.查询公寓信息
+        final ApartmentInfo apartmentInfo = getById(id);
+        if (apartmentInfo == null) {
+            return null;
+        }
+        // 2.查询图片列表
+        List<GraphVo> graphVoList = graphInfoMapper.selectListByItemTypeAndId(ItemType.APARTMENT, id);
+        // 3.查询标签列表
+        List<LabelInfo> labelInfoList = labelInfoMapper.selectListByApartmentId(id);
+        // 4.查询配套列表
+        List<FacilityInfo> facilityInfoList = facilityInfoMapper.selectListByApartmentId(id);
+        // 5.查询杂费列表
+        List<FeeValueVo> feeValueVoList = feeValueMapper.selectListByApartmentId(id);
+        // 6.组装结果
+        final ApartmentDetailVo apartmentDetailVo = BeanUtil.copyProperties(apartmentInfo, ApartmentDetailVo.class);
+        apartmentDetailVo.setGraphVoList(graphVoList);
+        apartmentDetailVo.setLabelInfoList(labelInfoList);
+        apartmentDetailVo.setFacilityInfoList(facilityInfoList);
+        apartmentDetailVo.setFeeValueVoList(feeValueVoList);
+        return apartmentDetailVo;
+    }
+
+    @Override
+    public void removeApartmentById(Long id) {
+
+        // 若公寓内有房间则不删除
+        final long count = roomInfoService.count(new LambdaQueryWrapper<>(RoomInfo.class).eq(RoomInfo::getApartmentId, id));
+        if (count > 0){
+            // 直接抛出自定义异常让全局异常处理器处理
+            throw new LeaseException(ResultCodeEnum.ADMIN_APARTMENT_DELETE_ERROR);
+        }
+
+        removeById(id);
+        // 1.图片Graph 注意指定图片类型
+        graphInfoService.remove(
+                new LambdaQueryWrapper<>(GraphInfo.class)
+                        .eq(GraphInfo::getItemType, ItemType.APARTMENT)
+                        .eq(GraphInfo::getItemId, id)
+        );
+        // 2.配套Facility
+        apartmentFacilityService.remove(
+                new LambdaQueryWrapper<>(ApartmentFacility.class)
+                        .eq(ApartmentFacility::getApartmentId, id)
+        );
+        // 3.标签Label
+        apartmentLabelService.remove(
+                new LambdaQueryWrapper<>(ApartmentLabel.class)
+                        .eq(ApartmentLabel::getApartmentId, id)
+        );
+        // 4.杂费值FeeValue
+        apartmentFeeValueService.remove(
+                new LambdaQueryWrapper<>(ApartmentFeeValue.class)
+                        .eq(ApartmentFeeValue::getApartmentId, id)
+        );
     }
 }
 

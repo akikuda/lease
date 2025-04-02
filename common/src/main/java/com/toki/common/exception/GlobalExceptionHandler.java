@@ -2,6 +2,7 @@ package com.toki.common.exception;
 
 import com.toki.common.result.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -18,6 +19,13 @@ public class GlobalExceptionHandler {
     public Result error(Exception e) {
         e.printStackTrace();
         return Result.fail();
+    }
+
+    @ExceptionHandler(LeaseException.class)
+    @ResponseBody
+    public Result error(LeaseException e){
+        e.printStackTrace();
+        return Result.fail(e.getCode(), e.getMessage());
     }
 
 }

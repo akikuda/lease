@@ -50,4 +50,11 @@ public class Result<T> {
     public static <T> Result<T> fail(ResultCodeEnum resultCodeEnum) {
         return build(null, resultCodeEnum);
     }
+
+    public static <T> Result<T> fail(Integer code, String message) {
+        final Result<T> result = build(null);
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
+    }
 }
