@@ -59,7 +59,8 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
      */
     @Override
     public void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo) {
-        final boolean isUpdate = apartmentSubmitVo.getId() != null;
+        final Long apartmentId = apartmentSubmitVo.getId();
+        final boolean isUpdate = apartmentId != null;
         super.saveOrUpdate(apartmentSubmitVo);
 
         // 更新
@@ -69,22 +70,22 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
             graphInfoService.remove(
                     new LambdaQueryWrapper<>(GraphInfo.class)
                             .eq(GraphInfo::getItemType, ItemType.APARTMENT)
-                            .eq(GraphInfo::getItemId, apartmentSubmitVo.getId())
+                            .eq(GraphInfo::getItemId, apartmentId)
             );
             // 2.配套Facility
             apartmentFacilityService.remove(
                     new LambdaQueryWrapper<>(ApartmentFacility.class)
-                            .eq(ApartmentFacility::getApartmentId, apartmentSubmitVo.getId())
+                            .eq(ApartmentFacility::getApartmentId, apartmentId)
             );
             // 3.标签Label
             apartmentLabelService.remove(
                     new LambdaQueryWrapper<>(ApartmentLabel.class)
-                            .eq(ApartmentLabel::getApartmentId, apartmentSubmitVo.getId())
+                            .eq(ApartmentLabel::getApartmentId, apartmentId)
             );
             // 4.杂费值FeeValue
             apartmentFeeValueService.remove(
                     new LambdaQueryWrapper<>(ApartmentFeeValue.class)
-                            .eq(ApartmentFeeValue::getApartmentId, apartmentSubmitVo.getId())
+                            .eq(ApartmentFeeValue::getApartmentId, apartmentId)
             );
         }
 
@@ -98,7 +99,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
                 // VO转Entity
                 GraphInfo graphInfo = BeanUtil.copyProperties(graphVo, GraphInfo.class);
                 graphInfo.setItemType(ItemType.APARTMENT);
-                graphInfo.setItemId(apartmentSubmitVo.getId());
+                graphInfo.setItemId(apartmentId);
                 // 加入列表
                 graphInfoList.add(graphInfo);
             }
@@ -114,7 +115,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
                 final ApartmentFacility apartmentFacility = ApartmentFacility.builder()
                         .facilityId(id)
-                        .apartmentId(apartmentSubmitVo.getId())
+                        .apartmentId(apartmentId)
                         .build();
 
                 facilityList.add(apartmentFacility);
@@ -129,7 +130,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
             for (Long id : labelIds) {
                 final ApartmentLabel apartmentLabel = ApartmentLabel.builder()
                         .labelId(id)
-                        .apartmentId(apartmentSubmitVo.getId())
+                        .apartmentId(apartmentId)
                         .build();
                 labelList.add(apartmentLabel);
             }
@@ -143,7 +144,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
             for (Long id : feeValueIds) {
                 final ApartmentFeeValue apartmentFeeValue = ApartmentFeeValue.builder()
                         .feeValueId(id)
-                        .apartmentId(apartmentSubmitVo.getId())
+                        .apartmentId(apartmentId)
                         .build();
                 feeValueList.add(apartmentFeeValue);
             }

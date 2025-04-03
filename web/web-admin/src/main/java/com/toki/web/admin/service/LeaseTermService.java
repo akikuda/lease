@@ -4,9 +4,8 @@ import com.toki.model.entity.LeaseTerm;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
-* @author liubo
-* @description 针对表【lease_term(租期)】的数据库操作Service
-* @createDate 2023-07-24 15:48:00
+* @author toki
+* 针对表【lease_term(租期)】的数据库操作Service
 */
 public interface LeaseTermService extends IService<LeaseTerm> {
 

@@ -8,6 +8,9 @@ import lombok.Data;
 import java.util.List;
 
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "房间信息")
 public class RoomSubmitVo extends RoomInfo {

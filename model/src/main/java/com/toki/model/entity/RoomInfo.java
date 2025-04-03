@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * @author toki
+ */
 @Schema(description = "房间信息表")
 @TableName(value = "room_info")
 @Data

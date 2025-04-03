@@ -3,6 +3,9 @@ package com.toki.web.admin.vo.room;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Schema(description = "房间查询实体")
 @Data
 public class RoomQueryVo {

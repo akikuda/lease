@@ -2,6 +2,9 @@ package com.toki.web.admin.mapper;
 
 import com.toki.model.entity.AttrValue;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.toki.web.admin.vo.attr.AttrValueVo;
+
+import java.util.List;
 
 /**
 * @author toki
@@ -9,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface AttrValueMapper extends BaseMapper<AttrValue> {
 
+    List<AttrValueVo> selectListByRoomId(Long id);
 }
 
 

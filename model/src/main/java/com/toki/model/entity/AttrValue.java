@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Schema(description = "房间基本属性值表")
 @TableName(value = "attr_value")
 @Data
