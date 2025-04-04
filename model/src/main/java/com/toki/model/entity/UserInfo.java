@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Schema(description = "用户信息表")
 @TableName(value = "user_info")
 @Data
@@ -19,7 +22,7 @@ public class UserInfo extends BaseEntity {
     private String phone;
 
     @Schema(description = "密码")
-    @TableField(value = "password")
+    @TableField(value = "password", select = false)
     private String password;
 
     @Schema(description = "头像url")

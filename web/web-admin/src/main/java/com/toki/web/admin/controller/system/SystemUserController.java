@@ -1,26 +1,36 @@
 package com.toki.web.admin.controller.system;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.common.result.Result;
 import com.toki.model.entity.SystemUser;
 import com.toki.model.enums.BaseStatus;
+import com.toki.web.admin.service.SystemUserService;
 import com.toki.web.admin.vo.system.user.SystemUserItemVo;
 import com.toki.web.admin.vo.system.user.SystemUserQueryVo;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * @author toki
+ */
 @Tag(name = "后台用户信息管理")
 @RestController
 @RequestMapping("/admin/system/user")
+@RequiredArgsConstructor
 public class SystemUserController {
+
+    private final SystemUserService systemUserService;
 
     @Operation(summary = "根据条件分页查询后台用户列表")
     @GetMapping("page")
     public Result<IPage<SystemUserItemVo>> page(@RequestParam long current, @RequestParam long size, SystemUserQueryVo queryVo) {
-        return Result.ok();
+        final Page<SystemUser> page = new Page<>(current, size);
+        return Result.ok(systemUserService.pageSystemUser(page, queryVo));
     }
 
     @Operation(summary = "根据ID查询后台用户信息")

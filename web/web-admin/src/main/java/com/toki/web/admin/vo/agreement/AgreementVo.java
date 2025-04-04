@@ -2,10 +2,15 @@ package com.toki.web.admin.vo.agreement;
 
 import com.toki.model.entity.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "租约信息")
+@Builder
 public class AgreementVo extends LeaseAgreement {
 
     @Schema(description = "签约公寓信息")
