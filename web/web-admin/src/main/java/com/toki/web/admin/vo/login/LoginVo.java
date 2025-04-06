@@ -3,6 +3,9 @@ package com.toki.web.admin.vo.login;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "后台管理系统登录信息")
 public class LoginVo {

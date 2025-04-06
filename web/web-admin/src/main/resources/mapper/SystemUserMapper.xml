@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.admin.mapper.SystemUserMapper">
 
-    <select id="pageSystemUserByQuery"
+    <select id="pageSystemUser"
             resultType="com.toki.web.admin.vo.system.user.SystemUserItemVo">
         select  su.id,
                 username,
@@ -27,5 +27,20 @@
                 and su.phone like concat('%',#{queryVo.phone},'%')
             </if>
         </where>
+    </select>
+    <select id="selectOneByUsername" resultType="com.toki.model.entity.SystemUser">
+        select id,
+               username,
+               password,
+               name,
+               type,
+               phone,
+               avatar_url,
+               additional_info,
+               post_id,
+               status
+        from system_user
+        where is_deleted = 0
+          and username = #{username}
     </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.toki.web.admin.controller.lease;
 
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.common.result.Result;
 import com.toki.model.entity.LeaseAgreement;
 import com.toki.model.enums.LeaseStatus;
@@ -35,8 +36,7 @@ public class LeaseAgreementController {
     @Operation(summary = "根据条件分页查询租约列表")
     @GetMapping("page")
     public Result<IPage<AgreementVo>> page(@RequestParam long current, @RequestParam long size, AgreementQueryVo queryVo) {
-
-        return Result.ok();
+        return Result.ok(leaseAgreementService.pageAgreement(new Page<>(current, size), queryVo));
     }
 
     @Operation(summary = "根据id查询租约信息")

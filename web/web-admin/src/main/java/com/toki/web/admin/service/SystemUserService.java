@@ -14,4 +14,6 @@ import com.toki.web.admin.vo.system.user.SystemUserQueryVo;
 public interface SystemUserService extends IService<SystemUser> {
 
     IPage<SystemUserItemVo> pageSystemUser(Page<SystemUser> page, SystemUserQueryVo queryVo);
+
+    SystemUserItemVo getSystemUserItemById(Long id);
 }

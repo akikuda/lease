@@ -1,9 +1,12 @@
 package com.toki.web.admin.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.toki.model.entity.SystemPost;
 import com.toki.model.entity.SystemUser;
 import com.toki.web.admin.mapper.SystemUserMapper;
+import com.toki.web.admin.service.SystemPostService;
 import com.toki.web.admin.service.SystemUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toki.web.admin.vo.system.user.SystemUserItemVo;
@@ -21,10 +24,21 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         implements SystemUserService {
 
     private final SystemUserMapper systemUserMapper;
+    private final SystemPostService systemPostService;
 
     @Override
     public IPage<SystemUserItemVo> pageSystemUser(Page<SystemUser> page, SystemUserQueryVo queryVo) {
         return systemUserMapper.pageSystemUser(page, queryVo);
+    }
+
+    @Override
+    public SystemUserItemVo getSystemUserItemById(Long id) {
+        final SystemUser systemUser = getById(id);
+        final SystemPost post = systemPostService.getById(systemUser.getPostId());
+        final SystemUserItemVo systemUserItemVo =
+                BeanUtil.copyProperties(systemUser, SystemUserItemVo.class);
+        systemUserItemVo.setPostName(post.getName());
+        return systemUserItemVo;
     }
 }
 
