@@ -12,6 +12,7 @@ import com.toki.web.admin.mapper.SystemUserMapper;
 import com.toki.web.admin.service.LoginService;
 import com.toki.web.admin.vo.login.CaptchaVo;
 import com.toki.web.admin.vo.login.LoginVo;
+import com.toki.web.admin.vo.system.user.SystemUserInfoVo;
 import com.wf.captcha.SpecCaptcha;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -67,19 +68,28 @@ public class LoginServiceImpl implements LoginService {
         // 校验用户
         // 1. 用户是否存在
         SystemUser systemUser = systemUserMapper.selectOneByUsername(loginVo.getUsername());
-        if (systemUser == null){
+        if (systemUser == null) {
             throw new LeaseException(ResultCodeEnum.ADMIN_ACCOUNT_NOT_EXIST_ERROR);
         }
         // 2. 用户状态
-        if (systemUser.getStatus() == BaseStatus.DISABLE){
+        if (systemUser.getStatus() == BaseStatus.DISABLE) {
             throw new LeaseException(ResultCodeEnum.ADMIN_ACCOUNT_DISABLED_ERROR);
         }
         // 3. 校验密码
-        if (!systemUser.getPassword().equals(DigestUtil.md5Hex(loginVo.getPassword()))){
+        if (!systemUser.getPassword().equals(DigestUtil.md5Hex(loginVo.getPassword()))) {
             throw new LeaseException(ResultCodeEnum.ADMIN_ACCOUNT_ERROR);
         }
 
         // 登录成功，生成token并返回
         return JwtUtil.createToken(systemUser.getId(), systemUser.getUsername());
+    }
+
+    @Override
+    public SystemUserInfoVo getLoginUserInfoById(Long userId) {
+        final SystemUser systemUser = systemUserMapper.selectById(userId);
+        return SystemUserInfoVo.builder()
+                .name(systemUser.getName())
+                .avatarUrl(systemUser.getAvatarUrl())
+                .build();
     }
 }
