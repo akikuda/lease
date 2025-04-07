@@ -2,6 +2,7 @@ package com.toki.web.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -17,7 +18,6 @@ import com.toki.web.admin.vo.room.RoomItemVo;
 import com.toki.web.admin.vo.room.RoomQueryVo;
 import com.toki.web.admin.vo.room.RoomSubmitVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         if (!CollUtil.isEmpty(graphVoList)) {
             final ArrayList<GraphInfo> graphInfoList = new ArrayList<>();
             for (GraphVo graphVo : graphVoList) {
-                final GraphInfo graphInfo = BeanUtil.copyProperties(graphVo, GraphInfo.class);
+                final GraphInfo graphInfo = CglibUtil.copy(graphVo, GraphInfo.class);
                 graphInfo.setItemType(ItemType.ROOM);
                 graphInfo.setItemId(roomId);
                 graphInfoList.add(graphInfo);
@@ -209,7 +209,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
 
 
         // 组装结果
-        RoomDetailVo roomDetailVo = BeanUtil.copyProperties(roomInfo, RoomDetailVo.class);
+        RoomDetailVo roomDetailVo = CglibUtil.copy(roomInfo, RoomDetailVo.class);
 
         roomDetailVo.setApartmentInfo(apartmentInfo);
         roomDetailVo.setGraphVoList(graphVoList);

@@ -17,7 +17,6 @@ import com.wf.captcha.SpecCaptcha;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 

@@ -2,6 +2,7 @@ package com.toki.web.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -97,7 +98,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
             // 遍历VO
             for (GraphVo graphVo : graphVoList) {
                 // VO转Entity
-                GraphInfo graphInfo = BeanUtil.copyProperties(graphVo, GraphInfo.class);
+                GraphInfo graphInfo = CglibUtil.copy(graphVo, GraphInfo.class);
                 graphInfo.setItemType(ItemType.APARTMENT);
                 graphInfo.setItemId(apartmentId);
                 // 加入列表
@@ -178,7 +179,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
         // 5.查询杂费列表
         List<FeeValueVo> feeValueVoList = feeValueMapper.selectListByApartmentId(id);
         // 6.组装结果
-        final ApartmentDetailVo apartmentDetailVo = BeanUtil.copyProperties(apartmentInfo, ApartmentDetailVo.class);
+        final ApartmentDetailVo apartmentDetailVo = CglibUtil.copy(apartmentInfo, ApartmentDetailVo.class);
         apartmentDetailVo.setGraphVoList(graphVoList);
         apartmentDetailVo.setLabelInfoList(labelInfoList);
         apartmentDetailVo.setFacilityInfoList(facilityInfoList);

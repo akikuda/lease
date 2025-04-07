@@ -1,11 +1,9 @@
 package com.toki.common.utils;
 
 import com.toki.common.exception.LeaseException;
-import com.toki.common.result.Result;
 import com.toki.common.result.ResultCodeEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 
 import javax.crypto.SecretKey;
 import java.util.Date;

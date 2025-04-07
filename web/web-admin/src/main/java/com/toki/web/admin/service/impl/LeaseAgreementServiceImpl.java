@@ -1,14 +1,14 @@
 package com.toki.web.admin.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toki.common.exception.LeaseException;
 import com.toki.common.result.ResultCodeEnum;
 import com.toki.model.entity.*;
 import com.toki.web.admin.mapper.LeaseAgreementMapper;
 import com.toki.web.admin.service.*;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toki.web.admin.vo.agreement.AgreementQueryVo;
 import com.toki.web.admin.vo.agreement.AgreementVo;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class LeaseAgreementServiceImpl extends ServiceImpl<LeaseAgreementMapper,
         final PaymentType paymentType = paymentTypeService.getById(leaseAgreement.getPaymentTypeId());
         final LeaseTerm leaseTerm = leaseTermService.getById(leaseAgreement.getLeaseTermId());
 
-        final AgreementVo agreementVo = BeanUtil.copyProperties(leaseAgreement, AgreementVo.class);
+        final AgreementVo agreementVo = CglibUtil.copy(leaseAgreement, AgreementVo.class);
         agreementVo.setApartmentInfo(apartmentInfo);
         agreementVo.setRoomInfo(roomInfo);
         agreementVo.setPaymentType(paymentType);

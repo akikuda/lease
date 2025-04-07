@@ -75,6 +75,16 @@
             <artifactId>jjwt-jackson</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--sms阿里云短信服务-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>dysmsapi20170525</artifactId>
+        </dependency>
+        <!--cglib-->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

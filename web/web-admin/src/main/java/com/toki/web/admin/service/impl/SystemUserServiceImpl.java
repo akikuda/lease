@@ -1,6 +1,7 @@
 package com.toki.web.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.model.entity.SystemPost;
@@ -36,7 +37,7 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         final SystemUser systemUser = getById(id);
         final SystemPost post = systemPostService.getById(systemUser.getPostId());
         final SystemUserItemVo systemUserItemVo =
-                BeanUtil.copyProperties(systemUser, SystemUserItemVo.class);
+                CglibUtil.copy(systemUser, SystemUserItemVo.class);
         systemUserItemVo.setPostName(post.getName());
         return systemUserItemVo;
     }

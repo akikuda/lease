@@ -32,6 +32,7 @@
         <minio.version>8.2.0</minio.version>
         <knife4j.version>4.1.0</knife4j.version>
         <aliyun.sms.version>2.0.23</aliyun.sms.version>
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
     <!--配置dependencyManagement统一管理依赖版本-->
@@ -95,6 +96,13 @@
                 <groupId>com.aliyun</groupId>
                 <artifactId>dysmsapi20170525</artifactId>
                 <version>${aliyun.sms.version}</version>
+            </dependency>
+            <!--cglib-->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+                <scope>compile</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

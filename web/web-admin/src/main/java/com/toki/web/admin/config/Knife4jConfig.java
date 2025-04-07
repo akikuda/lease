@@ -11,12 +11,12 @@ public class Knife4jConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-
         return new OpenAPI().info(
                 new Info()
                         .title("后台管理系统API")
                         .version("1.0")
-                        .description("后台管理系统API"));
+                        .description("后台管理系统API")
+        );
     }
 
     @Bean
@@ -57,6 +57,7 @@ public class Knife4jConfig {
                         "/admin/file/**"
                 ).build();
     }
+
     @Bean
     public GroupedOpenApi leaseAPI() {
         return GroupedOpenApi.builder().group("租赁信息管理").
@@ -65,6 +66,7 @@ public class Knife4jConfig {
                         "/admin/agreement/**"
                 ).build();
     }
+
     @Bean
     public GroupedOpenApi userAPI() {
         return GroupedOpenApi.builder().group("平台用户管理").
