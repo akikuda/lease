@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
+ * @author toki
  * @TableName browsing_history
  */
 @TableName(value = "browsing_history")

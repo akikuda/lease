@@ -6,11 +6,12 @@ import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.toki.common.constant.RedisConstant;
 import com.toki.model.entity.*;
 import com.toki.model.enums.ItemType;
 import com.toki.web.admin.mapper.*;
 import com.toki.web.admin.service.*;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toki.web.admin.vo.attr.AttrValueVo;
 import com.toki.web.admin.vo.graph.GraphVo;
 import com.toki.web.admin.vo.room.RoomDetailVo;
@@ -18,6 +19,7 @@ import com.toki.web.admin.vo.room.RoomItemVo;
 import com.toki.web.admin.vo.room.RoomQueryVo;
 import com.toki.web.admin.vo.room.RoomSubmitVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ import java.util.List;
 
 /**
  * @author toki
- * 针对表【room_info(房间信息表)】的数据库操作Service实现
+ * 针对表【room_info(房间信息表)】的数据库操作Service实现 <br>
+ * 在对房间数据进行操作时，注意缓存和数据库的一致性
  */
 @Service
 @RequiredArgsConstructor
@@ -48,6 +51,8 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
     private final PaymentTypeMapper paymentTypeMapper;
     private final LeaseTermMapper leaseTermMapper;
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
     @Override
     public void saveOrUpdateRoom(RoomSubmitVo roomSubmitVo) {
         final Long roomId = roomSubmitVo.getId();
@@ -55,7 +60,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         super.saveOrUpdate(roomSubmitVo);
 
         if (isUpdate) {
-            // 更新，删除原有关联数据
+            // 更新，删除原有关联数据和缓存
             graphInfoService.remove(
                     new LambdaQueryWrapper<>(GraphInfo.class)
                             .eq(GraphInfo::getItemType, ItemType.ROOM)
@@ -86,6 +91,9 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
                     new LambdaQueryWrapper<>(RoomLeaseTerm.class)
                             .eq(RoomLeaseTerm::getRoomId, roomId)
             );
+
+            // 删除缓存
+            redisTemplate.delete(RedisConstant.APP_ROOM_PREFIX + roomId);
         }
 
         // 保存关联数据
@@ -257,6 +265,9 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         LambdaQueryWrapper<RoomLeaseTerm> termQueryWrapper = new LambdaQueryWrapper<>();
         termQueryWrapper.eq(RoomLeaseTerm::getRoomId, id);
         roomLeaseTermService.remove(termQueryWrapper);
+
+        //8.删除缓存
+        redisTemplate.delete(RedisConstant.APP_ROOM_PREFIX + id);
     }
 
 }

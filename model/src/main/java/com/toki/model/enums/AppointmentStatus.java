@@ -3,6 +3,10 @@ package com.toki.model.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * @author toki
+ */
+
 public enum AppointmentStatus implements BaseEnum {
 
 
@@ -15,10 +19,10 @@ public enum AppointmentStatus implements BaseEnum {
 
     @EnumValue
     @JsonValue
-    private Integer code;
+    private final Integer code;
 
 
-    private String name;
+    private final String name;
 
     AppointmentStatus(Integer code, String name) {
         this.code = code;

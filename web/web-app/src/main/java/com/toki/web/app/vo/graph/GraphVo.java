@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "图片信息")
 @AllArgsConstructor

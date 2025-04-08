@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "租约详细信息")
 public class AgreementDetailVo extends LeaseAgreement {

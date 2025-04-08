@@ -2,11 +2,18 @@ package com.toki.web.app.service;
 
 import com.toki.model.entity.LeaseAgreement;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.toki.model.enums.LeaseStatus;
+import com.toki.web.app.vo.agreement.AgreementDetailVo;
+import com.toki.web.app.vo.agreement.AgreementItemVo;
+
+import java.util.List;
 
 /**
-* @author liubo
-* @description 针对表【lease_agreement(租约信息表)】的数据库操作Service
-* @createDate 2023-07-26 11:12:39
+* @author toki
 */
 public interface LeaseAgreementService extends IService<LeaseAgreement> {
+
+    List<AgreementItemVo> listItemByPhone(String phone);
+
+    AgreementDetailVo getLeaseAgreementDetailById(Long id);
 }

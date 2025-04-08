@@ -11,6 +11,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * @author toki
+ */
 @Schema(description = "租约信息表")
 @TableName(value = "lease_agreement")
 @Data

@@ -9,6 +9,9 @@ import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "APP端预约看房基本信息")
 public class AppointmentItemVo {

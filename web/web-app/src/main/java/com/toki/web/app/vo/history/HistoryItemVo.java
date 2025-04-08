@@ -9,6 +9,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "浏览历史基本信息")
 public class HistoryItemVo extends BrowsingHistory {
