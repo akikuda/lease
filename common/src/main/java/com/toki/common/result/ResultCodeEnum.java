@@ -44,8 +44,9 @@ public enum ResultCodeEnum {
 
 
     TOKEN_EXPIRED(601, "token过期"),
-    TOKEN_INVALID(602, "token非法");
+    TOKEN_INVALID(602, "token非法"),
 
+    BLOG_SAVE_ERROR(701, "博文发布失败");
 
     private final Integer code;
 

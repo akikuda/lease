@@ -8,6 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author toki
+ */
 @Data
 public class BaseEntity implements Serializable {
 

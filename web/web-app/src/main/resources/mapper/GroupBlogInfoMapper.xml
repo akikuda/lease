@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toki.web.app.mapper.GroupBlogInfoMapper">
+
+    <select id="pageItem" resultType="com.toki.web.app.vo.group.GroupBlogVo">
+        select bi.id,
+               bi.apartment_id,
+               bi.user_id,
+               bi.title,
+               bi.content,
+               bi.liked,
+               bi.comments,
+               gi.name,
+               gi.url
+        from group_blog_info bi
+                 left join graph_info gi on gi.item_type = 3 and bi.id = gi.item_id and gi.is_deleted = 0
+        where bi.is_deleted = 0
+        order by bi.liked,bi.create_time desc
+    </select>
+</mapper>
