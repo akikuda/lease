@@ -4,19 +4,41 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.app.mapper.GroupBlogInfoMapper">
 
-    <select id="pageItem" resultType="com.toki.web.app.vo.group.GroupBlogVo">
-        select bi.id,
-               bi.apartment_id,
-               bi.user_id,
-               bi.title,
-               bi.content,
-               bi.liked,
-               bi.comments,
-               gi.name,
-               gi.url
-        from group_blog_info bi
-                 left join graph_info gi on gi.item_type = 3 and bi.id = gi.item_id and gi.is_deleted = 0
-        where bi.is_deleted = 0
-        order by bi.liked,bi.create_time desc
+    <resultMap id="GroupPageMap" type="com.toki.web.app.vo.group.GroupBlogVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <!--使用嵌套查询（子查询）映射图片列表-->
+        <collection property="graphVoList" ofType="com.toki.web.app.vo.graph.GraphVo"
+                    select="selectGraphByBlogId" column="id"/>
+    </resultMap>
+
+    <!--分页查询-->
+    <select id="pageItem" resultMap="GroupPageMap">
+        select id,
+               apartment_id,
+               user_id,
+               title,
+               content,
+               liked,
+               comments,
+               create_time
+        from group_blog_info
+        <where>
+            is_deleted = 0
+            <if test="apartmentId!= null">
+                and apartment_id = #{apartmentId}
+            </if>
+        </where>
+        order by liked desc, create_time desc
+    </select>
+
+    <!--子查询-->
+    <select id="selectGraphByBlogId" resultType="com.toki.web.app.vo.graph.GraphVo">
+        select id,
+               name,
+               url
+        from graph_info
+        where item_type = 3
+          and item_id = #{id}
+          and is_deleted = 0
     </select>
 </mapper>

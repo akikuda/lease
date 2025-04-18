@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "租约基本信息")
 public class AgreementItemVo {
@@ -20,6 +23,9 @@ public class AgreementItemVo {
 
     @Schema(description = "房间图片列表")
     private List<GraphVo> roomGraphVoList;
+
+    @Schema(description = "公寓ID")
+    private Long apartmentId;
 
     @Schema(description = "公寓名称")
     private String apartmentName;

@@ -33,6 +33,9 @@ public class JwtUtil {
             throw new LeaseException(ResultCodeEnum.ADMIN_LOGIN_AUTH);
         }
 
+        // 13191972455的token 调试用
+//        token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjksInVzZXJuYW1lIjoiMTMxOTI5NzI0NTUiLCJleHAiOjE3ODA2MTgyMTgsInN1YiI6IkxPR0lOX1VTRVIifQ.Y4jlYLUhy-vJyNJd3pDpRs6VquD2R7yOejTH4ooV548";
+
         try {
             final JwtParser jwtParser = Jwts.parserBuilder()
                     .setSigningKey(TOKEN_SIGN_KEY)

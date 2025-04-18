@@ -14,7 +14,8 @@ import com.toki.web.app.vo.group.GroupBlogVo;
 */
 public interface GroupBlogInfoMapper extends BaseMapper<GroupBlogInfo> {
 
-    IPage<GroupBlogVo> pageItem(Page<GroupBlogVo> page);
+    // 分页查询，根据公寓ID查询相应公寓的博文，若公寓ID = -1，则表示查询公共博文
+    IPage<GroupBlogVo> pageItem(Page<GroupBlogVo> page, Long apartmentId);
 }
 
 

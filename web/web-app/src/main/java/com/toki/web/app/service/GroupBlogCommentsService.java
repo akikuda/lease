@@ -8,4 +8,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface GroupBlogCommentsService extends IService<GroupBlogComments> {
 
+    /**
+     * 只有博文作者和评论作者可以删除评论
+     * */
+    boolean removeCommentById(Long id);
 }

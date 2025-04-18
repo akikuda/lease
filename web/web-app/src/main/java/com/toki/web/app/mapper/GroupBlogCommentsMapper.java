@@ -2,6 +2,9 @@ package com.toki.web.app.mapper;
 
 import com.toki.model.entity.GroupBlogComments;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.toki.web.app.vo.group.CommentItemVo;
+
+import java.util.List;
 
 /**
 * @author toki
@@ -11,6 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface GroupBlogCommentsMapper extends BaseMapper<GroupBlogComments> {
 
+    List<CommentItemVo> queryBlogCommentListById(Long id);
 }
 
 

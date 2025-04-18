@@ -4,4 +4,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.app.mapper.GroupBlogCommentsMapper">
 
+    <select id="queryBlogCommentListById" resultType="com.toki.web.app.vo.group.CommentItemVo">
+        select gbc.id,
+               gbc.user_id,
+               gbc.blog_id,
+               gbc.parent_id,
+               gbc.reply_user_id,
+               gbc.content,
+               ui.avatar_url,
+               ui.nickname,
+               rui.nickname as reply_user_nickname
+        from group_blog_comments gbc
+                 left join user_info ui on ui.id = gbc.user_id and ui.is_deleted = 0
+                           /* 第二次连接，获取被回复用户的昵称 */
+                 left join user_info rui on rui.id = gbc.reply_user_id and rui.is_deleted = 0
+        where gbc.blog_id = #{blogId}
+          and gbc.is_deleted = 0
+        order by gbc.create_time desc
+    </select>
 </mapper>

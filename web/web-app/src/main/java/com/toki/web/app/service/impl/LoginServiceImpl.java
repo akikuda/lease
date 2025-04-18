@@ -1,6 +1,7 @@
 package com.toki.web.app.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.cglib.CglibUtil;
@@ -75,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
             throw new LeaseException(ResultCodeEnum.APP_LOGIN_CODE_EXPIRED);
         }
         // 判断验证码是否正确
-        if (!code.equals(loginVo.getCode())){
+        if (!code.equals(loginVo.getCode())) {
             throw new LeaseException(ResultCodeEnum.APP_LOGIN_CODE_ERROR);
         }
 
@@ -84,15 +85,15 @@ public class LoginServiceImpl implements LoginService {
                         .eq(UserInfo::getPhone, phone)
         );
         // 判断用户是否存在
-        if (BeanUtil.isEmpty(userInfo)){
+        if (BeanUtil.isEmpty(userInfo)) {
             // 不存在，自动注册
             userInfo = new UserInfo();
             userInfo.setPhone(phone);
-            userInfo.setNickname("用户-" + phone.substring(7));
+            userInfo.setNickname("用户-" + phone.substring(7) + "-" + UUID.fastUUID().toString().substring(0, 4));
             userInfoMapper.insert(userInfo);
-        }else {
+        } else {
             // 存在，判断是否被禁用
-            if (userInfo.getStatus() == BaseStatus.DISABLE){
+            if (userInfo.getStatus() == BaseStatus.DISABLE) {
                 throw new LeaseException(ResultCodeEnum.APP_ACCOUNT_DISABLED_ERROR);
             }
         }

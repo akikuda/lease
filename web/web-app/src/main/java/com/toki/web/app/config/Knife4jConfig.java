@@ -7,6 +7,9 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author toki
+ */
 @Configuration
 public class Knife4jConfig {
 
@@ -53,5 +56,15 @@ public class Knife4jConfig {
                         "/app/term/**"
                 ).
                 build();
+    }
+
+    @Bean
+    public GroupedOpenApi groupBolgAPI() {
+        return GroupedOpenApi.builder().group("圈子模块")
+                .pathsToMatch(
+                        "/app/group/**",
+                        "/app/file/**"
+                )
+                .build();
     }
 }

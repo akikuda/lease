@@ -32,6 +32,12 @@ mybatis-plus:
 springdoc:
   default-flat-param-object: true
 
+minio:
+  endpoint: http://192.168.122.101:8000
+  access-key: admin
+  secret-key: admin123
+  bucket-name: lease-app-group
+
 aliyun:
   sms:
     access-key-id: LTAI5tKsEJtLgci3f4hWNuxj

@@ -34,6 +34,12 @@ public enum ResultCodeEnum {
     SYSTEM_POST_DELETE_ERROR(311, "请先删除该岗位下的员工"),
     LEASE_AGREEMENT_NOT_EXIST_ERROR(312, "房源协议不存在"),
 
+    NICK_USER_NAME_EXIST_ERROR(313, "用户昵称已存在"),
+    NICK_USER_NAME_ERROR(314, "用户昵称不合法"),
+    AVATAR_UPLOAD_ERROR(315, "头像上传失败"),
+    AVATAR_FORMAT_ERROR(316, "头像格式错误"),
+    AVATAR_SIZE_ERROR(317, "头像大小超出限制"),
+
     APP_LOGIN_AUTH(501, "未登陆"),
     APP_LOGIN_PHONE_EMPTY(502, "手机号码为空"),
     APP_LOGIN_CODE_EMPTY(503, "验证码为空"),

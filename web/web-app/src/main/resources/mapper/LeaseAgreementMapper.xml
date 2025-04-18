@@ -17,6 +17,7 @@
                la.payment_type_id,
                la.status lease_status,
                la.source_type,
+               la.apartment_id,
                ai.name apartment_name,
                ri.room_number,
                gi.name,

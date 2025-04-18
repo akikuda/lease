@@ -31,32 +31,20 @@ public class GroupBlogComments extends BaseEntity{
     private Long blogId;
 
     /**
-     * 关联的1级评论id，如果是一级评论，则值为0
+     * 父评论id，指向上一级评论，如果当前是一级评论，则值为null
      */
     @TableField(value = "parent_id")
     private Long parentId;
 
     /**
-     * 回复的评论id
+     * 被回复的用户id,即你回复了谁,如果没有回复谁，则值为null
      */
-    @TableField(value = "answer_id")
-    private Long answerId;
+    @TableField(value = "reply_user_id")
+    private Long replyUserId;
 
     /**
      * 回复的内容
      */
     @TableField(value = "content")
     private String content;
-
-    /**
-     * 点赞数量
-     */
-    @TableField(value = "liked")
-    private Integer liked;
-
-    /**
-     * 状态，0：正常，1：被举报，2：禁止查看
-     */
-    @TableField(value = "status")
-    private Integer status;
 }
