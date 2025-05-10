@@ -33,7 +33,7 @@ public class UserInfo extends BaseEntity {
     @TableField(value = "nickname")
     private String nickname;
 
-    @Schema(description = "账号状态")
+    @Schema(description = "账号状态,1-启用，0-禁用")
     @TableField(value = "status")
     private BaseStatus status;
 

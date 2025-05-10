@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toki.web.app.mapper.MessageInfoMapper">
+    <update id="updateIsRead">
+        update message_info
+        set is_read = 1
+        where send_user_id = #{sendUserId}
+        and receive_user_id = #{receiveUserId}
+        and is_deleted = 0
+        and id in
+        <foreach item="id" index="index" collection="messageIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <select id="selectChatHistory" resultType="com.toki.model.entity.MessageInfo">
+        select id,
+               send_user_id,
+               receive_user_id,
+               content,
+               is_read,
+               is_ai,
+               create_time
+        from message_info
+        where is_deleted = 0
+            and (send_user_id = #{sendUserId} and receive_user_id = #{receiveUserId})
+           or (send_user_id = #{receiveUserId} and receive_user_id = #{sendUserId})
+        order by create_time
+        limit #{limitMsgLength}
+    </select>
+
+    <select id="getSessionUserIds" resultType="java.lang.Long" parameterType="java.lang.Long">
+        SELECT send_user_id AS t_user_id
+        FROM message_info
+        WHERE receive_user_id = #{userId}
+          AND is_deleted = 0
+
+        UNION
+
+        SELECT receive_user_id AS t_user_id
+        FROM message_info
+        WHERE send_user_id = #{userId}
+          AND is_deleted = 0
+
+        UNION
+
+        SELECT follow_user_id AS t_user_id
+        FROM group_follow
+        WHERE user_id = #{userId}
+          AND is_deleted = 0
+    </select>
+
+<!--    <select id="querySortedMessage" resultType="java.lang.Long"-->
+<!--            parameterType="long">-->
+<!--    </select>-->
+
+</mapper>

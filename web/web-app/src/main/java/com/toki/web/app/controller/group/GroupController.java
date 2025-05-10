@@ -1,10 +1,8 @@
 package com.toki.web.app.controller.group;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toki.common.result.Result;
-import com.toki.model.entity.GroupBlogComments;
 import com.toki.web.app.service.GroupBlogCommentsService;
 import com.toki.web.app.service.GroupBlogInfoService;
 import com.toki.web.app.vo.group.CommentItemVo;
@@ -60,6 +58,7 @@ public class GroupController {
         return Result.ok(blogService.likeBlog(id));
     }
 
+    //todo 待优化
     @Operation(summary = "根据id查询博文点赞前5名用户")
     @GetMapping("/likes/top5/{id}")
     public Result<List<UserInfoVo>> queryBlogLikes(@PathVariable("id") Long id) {
@@ -68,7 +67,7 @@ public class GroupController {
 
     @Operation(summary = "提交评论")
     @PostMapping("/comment")
-    public Result saveComment(@RequestBody CommentSubmitVo comment){
+    public Result saveComment(@RequestBody CommentSubmitVo comment) {
         return Result.ok(blogService.saveComment(comment));
     }
 
@@ -80,9 +79,10 @@ public class GroupController {
 
     @Operation(summary = "根据评论id删除评论")
     @DeleteMapping("/removeComment/{id}")
-    public Result removeCommentById(@PathVariable("id") Long id){
+    public Result removeCommentById(@PathVariable("id") Long id) {
         return Result.ok(commentsService.removeCommentById(id));
     }
 
 
 }
+

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 /**
  * 统一返回结果状态信息类
+ * @author toki
  */
 @Getter
 public enum ResultCodeEnum {
@@ -39,6 +40,7 @@ public enum ResultCodeEnum {
     AVATAR_UPLOAD_ERROR(315, "头像上传失败"),
     AVATAR_FORMAT_ERROR(316, "头像格式错误"),
     AVATAR_SIZE_ERROR(317, "头像大小超出限制"),
+    USER_NOT_EXIST_ERROR(318, "用户不存在"),
 
     APP_LOGIN_AUTH(501, "未登陆"),
     APP_LOGIN_PHONE_EMPTY(502, "手机号码为空"),
@@ -52,7 +54,15 @@ public enum ResultCodeEnum {
     TOKEN_EXPIRED(601, "token过期"),
     TOKEN_INVALID(602, "token非法"),
 
-    BLOG_SAVE_ERROR(701, "博文发布失败");
+    BLOG_SAVE_ERROR(701, "博文发布失败"),
+
+    MESSAGE_SEND_USER_NOT_EXIST_ERROR(801, "发送用户不存在"),
+    MESSAGE_CONTENT_EMPTY_ERROR(802, "发送内容为空"),
+    MESSAGE_CONTENT_TOO_LONG_ERROR(807, "发送内容过长"),
+    MESSAGE_SEND_ERROR(803, "消息发送失败"),
+    MESSAGE_RECEIVE_USER_NOT_EXIST_ERROR(804, "接收用户不存在"),
+    MESSAGE_RECEIVE_USER_EMPTY_ERROR(805, "接收用户为空"),
+    MESSAGE_SEND_USER_EMPTY_ERROR(806, "发送用户为空");
 
     private final Integer code;
 

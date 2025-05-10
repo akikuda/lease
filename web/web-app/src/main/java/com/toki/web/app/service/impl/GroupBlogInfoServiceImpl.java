@@ -1,8 +1,10 @@
 package com.toki.web.app.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.cglib.CglibUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,10 +13,12 @@ import com.toki.common.exception.LeaseException;
 import com.toki.common.utils.LoginUser;
 import com.toki.common.utils.LoginUserHolder;
 import com.toki.model.entity.*;
-import com.toki.model.enums.ItemType;
 import com.toki.web.app.mapper.GroupBlogCommentsMapper;
 import com.toki.web.app.mapper.GroupBlogInfoMapper;
-import com.toki.web.app.service.*;
+import com.toki.web.app.service.GraphInfoService;
+import com.toki.web.app.service.GroupBlogInfoService;
+import com.toki.web.app.service.GroupFollowService;
+import com.toki.web.app.service.UserInfoService;
 import com.toki.web.app.vo.graph.GraphVo;
 import com.toki.web.app.vo.group.CommentItemVo;
 import com.toki.web.app.vo.group.CommentSubmitVo;
@@ -28,10 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.toki.common.constant.RedisConstant.BLOG_LIKED_KEY;
-import static com.toki.common.constant.RedisConstant.FEED_KEY;
-import static com.toki.common.result.ResultCodeEnum.ADMIN_LOGIN_AUTH;
-import static com.toki.common.result.ResultCodeEnum.BLOG_SAVE_ERROR;
+import static com.toki.common.constant.RedisConstant.*;
+import static com.toki.common.result.ResultCodeEnum.*;
+import static com.toki.model.enums.ItemType.GROUP;
 
 /**
  * @author toki
@@ -44,6 +47,7 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
 
     private final GroupBlogInfoMapper groupBlogInfoMapper;
     private final GroupBlogCommentsMapper commentsMapper;
+//    private final GraphInfoMapper graphInfoMapper;
 
     private final GroupFollowService groupFollowService;
     private final UserInfoService userInfoService;
@@ -71,7 +75,7 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
             for (GraphVo graphVo : graphVoList) {
                 // VO转Entity
                 GraphInfo graphInfo = CglibUtil.copy(graphVo, GraphInfo.class);
-                graphInfo.setItemType(ItemType.GROUP);
+                graphInfo.setItemType(GROUP);
                 graphInfo.setItemId(blogVo.getId());
                 // 加入列表
                 graphInfoList.add(graphInfo);
@@ -113,24 +117,103 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
         return blogVoPage;
     }
 
+    // 不可行，信息变更频繁（用户信息、点赞数、评论数）
+    // 查询博文ID列表，再缓存每个对象条目,然后以id为key存入map，再查询未在缓存中的id，批量查询数据库，并存入redis
+//    @Override
+//    public IPage<GroupBlogVo> pageItem(Page<GroupBlogVo> page, Long apartmentId) {
+//
+//        final long size = page.getSize();
+//        final long current = page.getCurrent();
+//        final Page<Long> idPage = new Page<>(current, size);
+//        // 查询博文ID列表
+//        List<Long> blogIds = groupBlogInfoMapper.pageItemIdList(idPage, apartmentId);
+//        if (blogIds == null || blogIds.isEmpty()) {
+//            return new Page<>();
+//        }
+//
+//        // 查缓存
+//        final List<String> blogPage = stringRedisTemplate.opsForValue()
+//                .multiGet(blogIds.stream().map(id -> BLOG_KEY + id.toString()).collect(Collectors.toList()));
+//
+//        final HashMap<Long, GroupBlogVo> map = new HashMap<>();
+//        if (blogPage != null) {
+//            for (String blog : blogPage) {
+//                // 将缓存中的字符串转换为GroupBlogVo对象
+//                final GroupBlogVo blogVo = JSONUtil.toBean(blog, GroupBlogVo.class);
+//                map.put(blogVo.getId(), blogVo);
+//            }
+//        }
+//
+//        // 检查哪些ID在缓存中没有命中，并组装这些未命中的ID列表。
+//        final ArrayList<Long> noHitIds = new ArrayList<>();
+//        for (Long blogId : blogIds) {
+//            if (!map.containsKey(blogId)) {
+//                noHitIds.add(blogId);
+//            }
+//        }
+//
+//        // 使用未命中的ID列表从数据库中批量查询商品信息
+//        // 并将这些信息存储到Redis中
+//        if (!noHitIds.isEmpty()) {
+//            List<GroupBlogInfo> noHitBlogInfos = groupBlogInfoMapper.selectBatchIds(noHitIds);
+//            for (GroupBlogInfo blogInfo : noHitBlogInfos) {
+//                // 将GroupBlogInfo转换为GroupBlogVo
+//                GroupBlogVo blogVo = new GroupBlogVo();
+//                BeanUtil.copyProperties(blogInfo, blogVo);
+//                // 设置图片列表、发布时间等其他信息
+//                blogVo.setGraphVoList(graphInfoMapper.selectListByItemTypeAndId(GROUP,blogVo.getId()));
+//                blogVo.setPublishTime(DateUtil.formatDateTime(blogInfo.getCreateTime()));
+//
+//                // 将GroupBlogVo对象转换为JSON字符串并存储到Redis中
+//                String blogJson = JSONUtil.toJsonStr(blogVo);
+//                stringRedisTemplate.opsForValue().set(BLOG_KEY + blogVo.getId().toString(), blogJson);
+//                map.put(blogVo.getId(), blogVo);
+//            }
+//        }
+//
+//        // 获取当页数据
+//        final List<GroupBlogVo> records = new ArrayList<>(map.values());
+//
+//        if ( CollUtil.isEmpty(records) ){
+//            return new Page<>();
+//        }
+//
+//        // 遍历当前页数据，设置作者相关信息、博文点赞状态
+//        records.forEach(blogVo -> {
+//            this.queryUserIdByBlog(blogVo);
+//            this.isBlogLiked(blogVo);
+//        });
+//
+//        // 设置当前页数据
+//        page.setTotal(idPage.getTotal());
+//        page.setRecords(records);
+//
+//        return page;
+//    }
+
     @Override
     public boolean removeBlogById(Long id) {
 
-        // 先删除redis中的点赞数据
-        final String key = BLOG_LIKED_KEY + id;
-        stringRedisTemplate.delete(key);
-        // 删除相应图片
+        // 先删除redis中的数据
+        final String likeKey = BLOG_LIKED_KEY + id;
+        stringRedisTemplate.delete(likeKey);
+//        final String blogKey = BLOG_KEY + id;
+//        stringRedisTemplate.delete(blogKey);
+
+        // 再删除数据库中的数据
+        // 图片
         graphInfoService.remove(
                 new LambdaQueryWrapper<>(GraphInfo.class)
-                        .eq(GraphInfo::getItemType, ItemType.GROUP)
+                        .eq(GraphInfo::getItemType, GROUP)
                         .eq(GraphInfo::getItemId, id)
         );
-        // 删除相应评论
+        // 相应评论
         commentsMapper.delete(
                 new LambdaQueryWrapper<>(GroupBlogComments.class)
                         .eq(GroupBlogComments::getBlogId, id)
         );
 
+        // 博文
         return removeById(id);
     }
 
@@ -169,7 +252,7 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
         final String key = BLOG_LIKED_KEY + id;
         // 查询top5的点赞用户 Zrange key 0 4
         final Set<String> top5 = stringRedisTemplate.opsForZSet().range(key, 0, 4);
-        if (top5 == null || top5.isEmpty()) {
+        if (CollUtil.isEmpty(top5)) {
             // 没有点赞用户,返回空列表
             return Collections.emptyList();
         }
@@ -220,7 +303,7 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
      **/
     private void isBlogLiked(GroupBlogVo blogVo) {
         final LoginUser loginUser = LoginUserHolder.getLoginUser();
-        if (loginUser == null) {
+        if (BeanUtil.isEmpty(loginUser)) {
             // 未登录用户无需查询点赞状态
             return;
         }
@@ -237,13 +320,30 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
      **/
     private void queryUserIdByBlog(GroupBlogVo blogVo) {
 
-        //todo 这里若是同一个用户，可以直接从缓存中获取，这里暂时先不实现
-
         // 设置作者头像、昵称
         final Long userId = blogVo.getUserId();
-        final UserInfo userInfo = userInfoService.getById(userId);
-        blogVo.setAvatarUrl(userInfo.getAvatarUrl());
-        blogVo.setName(userInfo.getNickname());
+        if (userId == null) {
+            throw new LeaseException(USER_NOT_EXIST_ERROR);
+        }
+        final String userKey = BLOG_USER_KEY + userId;
+        final String userInfoVoJson = stringRedisTemplate.opsForValue().get(userKey);
+        UserInfoVo userInfoVo;
+        if (StrUtil.isNotBlank(userInfoVoJson)) {
+            // 缓存命中
+            userInfoVo = JSONUtil.toBean(userInfoVoJson, UserInfoVo.class);
+        } else {
+            // 未命中，查询数据库，并存入缓存
+            UserInfo userInfo = userInfoService.getById(userId);
+            if (BeanUtil.isEmpty(userInfo)) {
+                throw new LeaseException(USER_NOT_EXIST_ERROR);
+            }
+            // 转VO，然后存入缓存
+            userInfoVo = CglibUtil.copy(userInfo, UserInfoVo.class);
+            stringRedisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(userInfoVo));
+        }
+
+        blogVo.setAvatarUrl(userInfoVo.getAvatarUrl());
+        blogVo.setName(userInfoVo.getNickname());
         // 设置发布时间 格式化
         Date publishTime = blogVo.getCreateTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

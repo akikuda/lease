@@ -23,6 +23,20 @@ spring:
       port: 6379
       database: 0
       password: toki123456
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY}
+      base-url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+      chat:
+        options:
+          model: qwen-max
+    openai:
+      api-key: ${DASHSCOPE_API_KEY}
+      base-url: "https://dashscope.aliyuncs.com/compatible-mode"
+      chat:
+        options:
+          model: qwen-max-latest
+          temperature: 0.9 # 随机性，越大越随机
 
 #用于打印框架生成的sql语句，便于调试
 mybatis-plus:

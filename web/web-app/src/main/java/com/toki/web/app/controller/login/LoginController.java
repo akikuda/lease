@@ -42,5 +42,11 @@ public class LoginController {
                 loginService.getLoginUserInfoById(LoginUserHolder.getLoginUser().getUserId())
         );
     }
+
+    @GetMapping("getInfo")
+    @Operation(summary = "获取指定用户信息")
+    public Result<UserInfoVo> info(@RequestParam("id") Long id) {
+        return Result.ok(loginService.getLoginUserInfoById(id));
+    }
 }
 

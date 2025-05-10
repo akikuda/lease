@@ -39,7 +39,6 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         implements RoomInfoService {
 
     private final RoomInfoMapper roomInfoMapper;
-    private final ApartmentInfoMapper apartmentInfoMapper;
     private final GraphInfoMapper graphInfoMapper;
     private final AttrValueMapper attrValueMapper;
     private final FacilityInfoMapper facilityInfoMapper;

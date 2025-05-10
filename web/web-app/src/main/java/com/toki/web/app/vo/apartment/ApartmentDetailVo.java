@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
+/**
+ * @author toki
+ */
 @Data
 @Schema(description = "APP端公寓信息详情")
 public class ApartmentDetailVo extends ApartmentInfo {

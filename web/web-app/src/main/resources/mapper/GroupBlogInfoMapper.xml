@@ -41,4 +41,16 @@
           and item_id = #{id}
           and is_deleted = 0
     </select>
+
+<!--    <select id="pageItemIdList" resultType="java.lang.Long">-->
+<!--        select id-->
+<!--        from group_blog_info-->
+<!--        <where>-->
+<!--            is_deleted = 0-->
+<!--            <if test="apartmentId!= null">-->
+<!--                and apartment_id = #{apartmentId}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        order by liked desc, create_time desc-->
+<!--    </select>-->
 </mapper>

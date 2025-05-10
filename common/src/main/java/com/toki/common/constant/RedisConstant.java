@@ -12,8 +12,17 @@ public class RedisConstant {
     public static final String APP_ROOM_PREFIX = "app:room:";
 
     public static final String FEED_KEY = "feed:";
+    public static final String BLOG_KEY = "blog:";
     public static final String BLOG_LIKED_KEY = "blog:liked:";
+    public static final String BLOG_USER_KEY = "blog:user:";
+    public static final String FOLLOWS_KEY = "follows:";
+    public static final String CHAT_KEY = "chat:";
+    public static final String LOGIN_COUNT_KEY = "loginCount:";
+    public static final String ONLINE_USERS_KEY = "onlineUsers:";
+    public static final String SESSION_ID_KEY = "sessionId:";
+
 
     public static final Integer NULL_EXPIRE_TIME_SEC = 60 * 3;
 
+    public static final String MESSAGE_PROCESSED = "message:processed:";
 }

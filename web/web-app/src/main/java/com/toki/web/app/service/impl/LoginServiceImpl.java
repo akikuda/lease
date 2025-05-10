@@ -18,6 +18,7 @@ import com.toki.web.app.service.SmsService;
 import com.toki.web.app.vo.user.LoginVo;
 import com.toki.web.app.vo.user.UserInfoVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author toki
  */
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
@@ -51,9 +53,14 @@ public class LoginServiceImpl implements LoginService {
             }
         }
         // 生成随机验证码
-        final String code = RandomUtil.randomNumbers(6);
+        String code = RandomUtil.randomNumbers(6);
+        // 若code首位为0，则重新生成,因为在redis中以JSON格式显示时，0开头会被忽略
+        while (code.startsWith("0")) {
+            code = RandomUtil.randomNumbers(6);
+        }
         // 发送验证码
         smsService.sendCode(phone, code);
+        log.warn("短信验证码- - - - - >{}", code);
         // 存入redis, 有效期10分钟
         stringRedisTemplate.opsForValue().set(key, code, RedisConstant.APP_LOGIN_CODE_TTL_SEC, TimeUnit.SECONDS);
     }
