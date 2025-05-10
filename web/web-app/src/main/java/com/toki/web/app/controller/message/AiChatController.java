@@ -2,17 +2,21 @@ package com.toki.web.app.controller.message;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.cglib.CglibUtil;
-import com.toki.common.repository.ChatHistoryRepository;
+import com.toki.web.app.service.AiChatHistoryService;
 import com.toki.web.app.vo.message.MessageVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.toki.common.constant.RabbitMqConstant.*;
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 
 /**
@@ -23,11 +27,12 @@ import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvis
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/app/ai")
-public class CustomerServiceChatController {
+public class AiChatController {
 
     private final ChatClient serviceChatClient;
-    private final ChatHistoryRepository chatHistoryRepository;
+    private final AiChatHistoryService aiChatHistoryService;
     private final ChatMemory chatMemory;
+    private final RabbitTemplate rabbitTemplate;
 
     /**
      * 聊天
@@ -36,8 +41,15 @@ public class CustomerServiceChatController {
     public Flux<String> chat(String prompt, String chatId, Long userId) {
         // 使用userId和chatId组合成唯一标识
         String sessionKey = userId + "_" + chatId;
-        // 保存会话记录
-        chatHistoryRepository.save("service", sessionKey, userId);
+        
+        // 异步保存会话ID（通过RabbitMQ）
+        Map<String, Object> messageMap = new HashMap<>();
+        messageMap.put("type", "service");
+        messageMap.put("sessionKey", sessionKey);
+        messageMap.put("userId", userId);
+        messageMap.put("prompt", prompt);
+        rabbitTemplate.convertAndSend(MESSAGE_DIRECT, "aiMessage", messageMap);
+        
         // 调用模型
         return this.serviceChatClient.prompt()
                 .user(prompt)
@@ -51,7 +63,7 @@ public class CustomerServiceChatController {
      */
     @GetMapping("/history/{type}")
     public List<String> getChatIds(@PathVariable("type") String type, Long userId) {
-        return chatHistoryRepository.getChatIds(type, userId);
+        return aiChatHistoryService.getChatIds(type, userId);
     }
 
     /**

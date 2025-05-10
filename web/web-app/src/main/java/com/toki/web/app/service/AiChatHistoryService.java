@@ -1,11 +1,11 @@
-package com.toki.common.repository;
+package com.toki.web.app.service;
 
 import java.util.List;
 
 /**
  * @author toki
  */
-public interface ChatHistoryRepository {
+public interface AiChatHistoryService {
 
     /**
      * 保存会话记录

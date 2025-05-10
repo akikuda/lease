@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import static com.toki.common.constant.RabbitMqConstant.SAVE_MESSAGE_QUEUE;
 
 /**
- * 发送消息的消费者
+ * 保存消息的消费者
  * @author toki
  */
 @RequiredArgsConstructor

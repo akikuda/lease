@@ -24,10 +24,10 @@ public class RabbitMqConfig {
     }
 
     // 定义Direct交换机
-//    @Bean
-//    public DirectExchange directExchange(){
-//        return ExchangeBuilder.directExchange(MESSAGE_DIRECT).build();
-//    }
+    @Bean
+    public DirectExchange directExchange(){
+        return ExchangeBuilder.directExchange(MESSAGE_DIRECT).build();
+    }
 
     // 定义消息队列
 //    @Bean
@@ -52,6 +52,12 @@ public class RabbitMqConfig {
     public Queue saveMessageQueue(){
         return QueueBuilder.durable(SAVE_MESSAGE_QUEUE).build();
     }
+    
+    // 定义AI消息队列
+    @Bean
+    public Queue aiMessageQueue(){
+        return QueueBuilder.durable(AI_MESSAGE_QUEUE).build();
+    }
 
     // 定义send消息队列
 //    @Bean
@@ -63,6 +69,12 @@ public class RabbitMqConfig {
     @Bean
     public Binding bindingSaveQueueToFanout(FanoutExchange fanoutExchange, Queue saveMessageQueue){
         return BindingBuilder.bind(saveMessageQueue).to(fanoutExchange);
+    }
+    
+    // 绑定AI消息队列到Direct交换机
+    @Bean
+    public Binding bindingAiQueueToFanout(DirectExchange directExchange, Queue aiMessageQueue){
+        return BindingBuilder.bind(aiMessageQueue).to(directExchange).with(AI_MESSAGE_KEY);
     }
 
 //    @Bean
