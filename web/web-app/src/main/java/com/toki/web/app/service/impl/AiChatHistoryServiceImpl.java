@@ -114,7 +114,7 @@ public class AiChatHistoryServiceImpl implements AiChatHistoryService {
                 aiChatHistoryMapper.insert(aiChatHistory);
             }
         } catch (Exception e) {
-            log.error("保存AI聊天历史到数据库失败: type={}, sessionKey={}, userId={}", type, sessionKey, userId, e);
+            log.error("保存AI聊天历史ID到数据库失败: type={}, sessionKey={}, userId={}", type, sessionKey, userId, e);
         }
     }
     
@@ -126,7 +126,7 @@ public class AiChatHistoryServiceImpl implements AiChatHistoryService {
             // 使用自定义方法查询
             return aiChatHistoryMapper.selectSessionKeysByTypeAndUserId(type, userId);
         } catch (Exception e) {
-            log.error("从数据库获取AI聊天历史失败: type={}, userId={}", type, userId, e);
+            log.error("从数据库获取AI聊天历史ID失败: type={}, userId={}", type, userId, e);
             return List.of();
         }
     }

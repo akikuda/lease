@@ -62,7 +62,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
     }
 
     @Override
-    public RoomDetailVo getRoomDetailById(Long id) {
+    public RoomDetailVo getRoomDetailById(Long id, boolean isAi) {
 
         final String key = RedisConstant.APP_ROOM_PREFIX + id;
         // 查缓存
@@ -109,8 +109,11 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             redisTemplate.opsForValue().set(key, roomDetailVo);
         }
 
-        // 此方法主要功能为查询房间详情，故利用@Async注解，异步保存浏览记录
-        browsingHistoryService.saveHistory(LoginUserHolder.getLoginUser().getUserId(), id);
+        // 非AI调用时保存房间浏览记录
+        if (!isAi){
+            // 此方法主要功能为查询房间详情，故利用@Async注解，异步保存浏览记录
+            browsingHistoryService.saveHistory(LoginUserHolder.getLoginUser().getUserId(), id);
+        }
 
         // 缓存命中直接返回
         return roomDetailVo;

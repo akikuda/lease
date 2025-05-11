@@ -25,27 +25,27 @@ public class ChatCommonConfig {
         return new InMemoryChatMemory();
     }
 
-    @Bean
-    public ChatClient chatClient(DashScopeChatModel model, ChatMemory chatMemory) {
-        return ChatClient.builder(model)
-                .defaultSystem("你的名字叫toki,你是一个公寓管理员，熟悉公寓的各个方面的知识")
-                .defaultAdvisors(
-                        new SimpleLoggerAdvisor(),
-                        new MessageChatMemoryAdvisor(chatMemory)
-                )
-                .build();
-    }
+//    @Bean
+//    public ChatClient chatClient(DashScopeChatModel model, ChatMemory chatMemory) {
+//        return ChatClient.builder(model)
+//                .defaultSystem("你的名字叫toki,你是一个公寓管理员，熟悉公寓的各个方面的知识")
+//                .defaultAdvisors(
+//                        new SimpleLoggerAdvisor(),
+//                        new MessageChatMemoryAdvisor(chatMemory)
+//                )
+//                .build();
+//    }
 
-    @Bean
-    public ChatClient gameChatClient(OpenAiChatModel model, ChatMemory chatMemory) {
-        return ChatClient.builder(model)
-                .defaultSystem(SystemConstants.GAME_SYSTEM_SETTINGS)
-                .defaultAdvisors(
-                        new SimpleLoggerAdvisor(),
-                        new MessageChatMemoryAdvisor(chatMemory)
-                )
-                .build();
-    }
+//    @Bean
+//    public ChatClient gameChatClient(OpenAiChatModel model, ChatMemory chatMemory) {
+//        return ChatClient.builder(model)
+//                .defaultSystem(SystemConstants.GAME_SYSTEM_SETTINGS)
+//                .defaultAdvisors(
+//                        new SimpleLoggerAdvisor(),
+//                        new MessageChatMemoryAdvisor(chatMemory)
+//                )
+//                .build();
+//    }
 
     @Bean
     public ChatClient serviceChatClient(OpenAiChatModel model, ChatMemory chatMemory, LeaseTools leaseTools) {

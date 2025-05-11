@@ -18,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AuthenticationInterceptor authenticationInterceptor;
+//    private final AiAuthenticationInterceptor aiAuthenticationInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -27,6 +28,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/app/login/**",
                         "/app/ai/**"
                 );
+        // 添加AI专用拦截器
+//        registry.addInterceptor(this.aiAuthenticationInterceptor)
+//                .addPathPatterns("/app/ai/**");
     }
 }
 

@@ -30,6 +30,7 @@ spring:
       chat:
         options:
           model: qwen-max
+      read-timeout: 300000 # 读取超时时间
     openai:
       api-key: ${DASHSCOPE_API_KEY}
       base-url: "https://dashscope.aliyuncs.com/compatible-mode"

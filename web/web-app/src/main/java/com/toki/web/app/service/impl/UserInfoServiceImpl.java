@@ -20,8 +20,12 @@ import static com.toki.common.result.ResultCodeEnum.ADMIN_USER_NAME_EXIST_ERROR;
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         implements UserInfoService {
 
+    private final UserInfoMapper userInfoMapper;
 
-
+    @Override
+    public Long getIdByPhone(String phone) {
+        return userInfoMapper.getIdByPhone(phone);
+    }
 }
 
 

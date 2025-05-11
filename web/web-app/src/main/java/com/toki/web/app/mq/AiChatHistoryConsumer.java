@@ -33,14 +33,14 @@ public class AiChatHistoryConsumer {
             Integer userIdInt = (Integer) messageMap.get("userId");
             final long userId = userIdInt.longValue();
 
-            log.warn("接收到AI聊天历史记录消息: type={}, sessionKey={}, userId={}", type, sessionKey, userId);
+            log.warn("接收到AI聊天历史记录ID消息: type={}, sessionKey={}, userId={}", type, sessionKey, userId);
             
             // 保存会话记录
             aiChatHistoryService.save(type, sessionKey, userId);
             
-            log.warn("AI聊天历史记录保存成功");
+            log.warn("AI聊天历史记录ID保存成功");
         } catch (Exception e) {
-            log.error("保存AI聊天历史记录失败", e);
+            log.error("保存AI聊天历史记录ID失败", e);
         }
     }
 } 
