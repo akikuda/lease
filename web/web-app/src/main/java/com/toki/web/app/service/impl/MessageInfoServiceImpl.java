@@ -41,7 +41,7 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
 
     private final MessageInfoMapper messageInfoMapper;
 
-//    private final GroupFollowService followService;
+    //    private final GroupFollowService followService;
     private final UserInfoService userService;
     private final RedisService redisService;
 
@@ -69,15 +69,29 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
         return getUnReadCount(userId, sessionUserIds);
     }
 
+//    /**
+//     * 有新消息时，保存消息到数据库
+//     * 逻辑修改：在触发WebSocket的onMessage时，若达阈值
+//     * 则调用此方法批量保存消息到数据库，然后再进行消息发送
+//     */
+//    @Override
+//    public void sendMsg(List<MessageInfo> messages) {
+        // 批量保存
+
+        // service层的savaBatch底层仍是单次保存，对于sql长度过大的性能较好
+//        this.saveBatch(messages);
+
+        // 这个方法MyBatisPlus有封装，内部是拼接sql，但是需要手动配置注入，这里简单调用，效果一样，所以手写就行
+//        messageInfoMapper.insertBatchSomeColumn(messages);
+//    }
+
     /**
      * 有新消息时，保存消息到数据库
      */
     @Override
     public void sendMsg(MessageInfo message) {
         // 数据校验
-        final Long sendUserId = message.getSendUserId();
-        final Long receiveUserId = message.getReceiveUserId();
-        userStatusCheck(message.getSendUserId(), receiveUserId);
+        userStatusCheck(message.getSendUserId(), message.getReceiveUserId());
         if (StrUtil.isBlank(message.getContent())) {
             throw new LeaseException(MESSAGE_CONTENT_EMPTY_ERROR);
         }
@@ -85,16 +99,16 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
         if (message.getContent().length() > limitMsgLength) {
             throw new LeaseException(MESSAGE_CONTENT_TOO_LONG_ERROR);
         }
-        // 判断是否已读(针对此消息的接收者)
-        // 判断接收者是否正在查看发送者的聊天,即接收者是否有当前会话的ID
-        boolean receiverIsViewing = isCurrentChatSession(receiveUserId, sendUserId);
-        // 如果是当前会话的ID，同时标记为已读
-        if (receiverIsViewing) {
-            message.setIsRead(READ);
-        } else {
-            message.setIsRead(UNREAD);
-        }
-
+//        // 判断是否已读(针对此消息的接收者)
+//        // 判断接收者是否正在查看发送者的聊天,即接收者是否有当前会话的ID
+//        boolean receiverIsViewing = isCurrentChatSession(receiveUserId, sendUserId);
+//        // 如果是当前会话的ID，同时标记为已读
+//        if (receiverIsViewing) {
+//            message.setIsRead(READ);
+//        } else {
+//            message.setIsRead(UNREAD);
+//        }
+        // 保存
         save(message);
     }
 
@@ -110,7 +124,8 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
         // 数据校验
         userStatusCheck(currentUserId, receiveUserId);
         // 查找两人之间的聊天记录,按留言时间排序,并限制消息数量,id传参顺序任意
-        final List<MessageInfo> messageInfos = messageInfoMapper.selectChatHistory(currentUserId, receiveUserId, limitMsgLength);
+        final List<MessageInfo> messageInfos =
+                messageInfoMapper.selectChatHistory(currentUserId, receiveUserId, limitMsgLength);
         if (messageInfos.isEmpty()) {
             return new ArrayList<>();
         }
@@ -130,18 +145,6 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
 
         // 返回聊天记录，isRead属性与数据库不同步不影响显示
         return messageInfos;
-        // 1个or连接两个and条件组
-//        return this.query()
-//                .and(wrapper ->
-//                        wrapper.eq("send_user_id", currentUserId)
-//                                .eq("receive_user_id", receiveUserId))
-//                .or()
-//                .and(wrapper ->
-//                        wrapper.eq("send_user_id", receiveUserId)
-//                                .eq("receive_user_id", currentUserId))
-//                .orderBy(true, true, "create_time")
-//                .last("limit " + limitMsgLength)
-//                .list();
     }
 
     /**
@@ -239,9 +242,9 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
 //                .or()
 //                .in("receive_user_id", sessionUserIds)
                 // nested()：嵌套查询， 创建一个独立的查询条件块，不带默认的 AND 或 OR 逻辑,确保每个条件块是独立的。
-                .nested(w->w.in("send_user_id", sessionUserIds).eq("receive_user_id", userId))
+                .nested(w -> w.in("send_user_id", sessionUserIds).eq("receive_user_id", userId))
                 .or()
-                .nested(w->w.in("receive_user_id", sessionUserIds).eq("send_user_id", userId))
+                .nested(w -> w.in("receive_user_id", sessionUserIds).eq("send_user_id", userId))
                 .orderByDesc("create_time")
                 .list();
 
@@ -268,6 +271,7 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
     }
 
     // 判断用户状态
+//    @Override
     private void userStatusCheck(Long sendUserId, Long receiveUserId) {
         final UserInfo receiveUser = userService.getById(receiveUserId);
         final UserInfo sendUser = userService.getById(sendUserId);

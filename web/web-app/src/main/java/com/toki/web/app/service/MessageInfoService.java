@@ -17,7 +17,9 @@ public interface MessageInfoService extends IService<MessageInfo> {
      * */
     Long unReadMsgCnt(Long userId);
 
-    void sendMsg(MessageInfo message);
+//    void sendMsg(List<MessageInfo> messages);
+
+    void sendMsg(MessageInfo messages);
 
     /**
      * 获取两人之间的聊天记录
@@ -34,5 +36,8 @@ public interface MessageInfoService extends IService<MessageInfo> {
 
     // 统计userId的消息列表sessionUserIds的未读消息总数量
     long getUnReadCount(Long userId, List<Long> sessionUserIds);
+
+    // 用户状态检查
+//    void userStatusCheck(Long sendUserId, Long receiveUserId);
 }
 

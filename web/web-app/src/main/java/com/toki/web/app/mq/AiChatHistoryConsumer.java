@@ -23,7 +23,7 @@ public class AiChatHistoryConsumer {
     private final AiChatHistoryService aiChatHistoryService;
 
     /**
-     * 处理保存聊天历史记录的消息
+     * 处理保存聊天历史记录ID的消息
      */
     @RabbitListener(queues = AI_MESSAGE_QUEUE)
     public void handleSaveChatHistory(Map<String, Object> messageMap) {

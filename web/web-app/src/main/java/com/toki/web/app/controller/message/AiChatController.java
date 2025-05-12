@@ -83,6 +83,7 @@ public class AiChatController {
     public Result<List<MessageVo>> getChatHistory(@PathVariable("chatId") String chatId, Long userId) {
         String sessionKey = userId + "_" + chatId;
 
+        // 从指定会话的对话中检索最新的N条消息
         final List<Message> messageList = chatMemory.get(sessionKey, Integer.MAX_VALUE);
         if (CollUtil.isEmpty(messageList)) {
             return Result.ok(List.of());

@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toki.web.app.mapper.MessageInfoMapper">
+
+    <!-- 批量保存消息 -->
+    <insert id="insertBatchSomeColumn">
+        INSERT INTO message_info
+        (id, send_user_id,
+        receive_user_id,
+        content, is_read,
+        is_ai,
+        create_time,
+        is_deleted)
+        VALUES
+        <foreach collection="messages" item="message" separator=",">
+            (
+            #{message.id},
+            #{message.sendUserId},
+            #{message.receiveUserId},
+            #{message.content},
+            #{message.isRead},
+            0,
+            #{message.createTime},
+            0
+            )
+        </foreach>
+    </insert>
+
     <update id="updateIsRead">
         update message_info
         set is_read = 1

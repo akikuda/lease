@@ -73,7 +73,7 @@ public class RabbitMqConfig {
     
     // 绑定AI消息队列到Direct交换机
     @Bean
-    public Binding bindingAiQueueToFanout(DirectExchange directExchange, Queue aiMessageQueue){
+    public Binding bindingAiQueueToDirect(DirectExchange directExchange, Queue aiMessageQueue){
         return BindingBuilder.bind(aiMessageQueue).to(directExchange).with(AI_MESSAGE_KEY);
     }
 

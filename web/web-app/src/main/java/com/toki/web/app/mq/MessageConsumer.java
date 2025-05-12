@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.toki.common.constant.RabbitMqConstant.SAVE_MESSAGE_QUEUE;
 
 /**
@@ -27,4 +29,12 @@ public class  MessageConsumer {
         msgService.sendMsg(message);
         log.warn("handelSendMessage处理完成");
     }
+
+    // 批量保存消息方案
+//    @RabbitListener(queues = SAVE_MESSAGE_QUEUE)
+//    public void handelSendMessage(List<MessageInfo> messageList){
+//        log.warn("handelSendMessage接收到消息列表：{}", messageList);
+//            msgService.sendMsg(messageList);
+//        log.warn("handelSendMessage处理完成");
+//    }
 }

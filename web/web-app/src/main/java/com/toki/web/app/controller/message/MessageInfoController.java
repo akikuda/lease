@@ -35,7 +35,7 @@ public class MessageInfoController {
 
     private final MessageInfoService msgService;
     private final StringRedisTemplate stringRedisTemplate;
-    private final RabbitTemplate rabbitTemplate;
+//    private final RabbitTemplate rabbitTemplate;
 
     @Operation(summary = "获取总的未读消息数量")
     @GetMapping("/unread")
@@ -46,15 +46,15 @@ public class MessageInfoController {
     }
 
     // 发送消息时保存消息到数据库
-    @Operation(summary = "保存消息")
-    @PostMapping("/send")
-    public Result sendMsg(@RequestBody MessageInfo message) {
-//        msgService.sendMsg(message);
-        log.warn("前端请求发送消息sendMsg: {}", message);
-//        message.setId(UUID.fastUUID().toString(true));
-        rabbitTemplate.convertAndSend(MESSAGE_FANOUT, MESSAGE_KEY, message);
-        return Result.ok();
-    }
+//    @Operation(summary = "保存消息")
+//    @PostMapping("/send")
+//    public Result sendMsg(@RequestBody MessageInfo message) {
+////        msgService.sendMsg(message);
+//        log.warn("前端请求发送消息sendMsg: {}", message);
+////        message.setId(UUID.fastUUID().toString(true));
+//        rabbitTemplate.convertAndSend(MESSAGE_FANOUT, MESSAGE_KEY, message);
+//        return Result.ok();
+//    }
 
     /**
      * 更新当前会话ID

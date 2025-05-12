@@ -2,6 +2,7 @@ package com.toki.web.app.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.toki.model.entity.MessageInfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public interface MessageInfoMapper extends BaseMapper<MessageInfo> {
      * @param userId 用户id
      */
     List<Long> getSessionUserIds(Long userId);
+
+
+    void insertBatchSomeColumn(@Param("messages") List<MessageInfo> messages);
 
 //    @Select("""
 //

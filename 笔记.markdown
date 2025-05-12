@@ -1,6 +1,6 @@
 2025-05-11 22:46
 ### WebMVC和WebFlux的区别
-WebMVC与WebFlux是两个不同的框架
+WebMVC与WebFlux是两个不同的框架,在同一项目中一般无法同时使用。
 WebMVC 基于Servlet API，采用同步阻塞模型，每个请求分配独立线程，适合传统CRUD应用；
 WebFlux 基于响应式编程（Reactive Streams），使用非阻塞异步模型，通过事件循环处理高并发请求，适合低延迟、高吞吐场景（如流处理）。
 WebMVC依赖Servlet容器（如Tomcat），WebFlux可适配Netty等非Servlet环境，后者对函数式编程和异步思维要求更高。
@@ -9,6 +9,7 @@ WebMVC依赖Servlet容器（如Tomcat），WebFlux可适配Netty等非Servlet环
 ### 流式输出的实现方式
 - SSE长连接
 - 基于WebFlux的Flux/Mono
+- 注意：请求头Content-Type必须为text/event-stream，否则浏览器无法解析。
 
 ### AI的Tool调用问题
 Ai通过异步调用Tool，在项目中需要用到ThreadLocal来传递上下文信息，
