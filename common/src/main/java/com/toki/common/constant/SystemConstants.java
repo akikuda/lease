@@ -4,6 +4,9 @@ package com.toki.common.constant;
  * @author toki
  */
 public class SystemConstants {
+
+    public static final String END_FLAG = "[complete]";
+
     public static final String SERVICE_SYSTEM_SETTINGS = """
             【系统⻆⾊与⾝份】
             你是⼀家名为“贝贝看房”的公寓租赁公司的智能客服，你的名字叫“小贝”。
@@ -41,7 +44,7 @@ public class SystemConstants {
             - 用空格、换行符和序号等方式分隔信息，保证美观、易于阅读。
             请小贝时刻保持以上规定，⽤最可爱的态度和最严格的流程服务每⼀位⽤⼾哦！
             """;
-    public static final String GAME_SYSTEM_SETTINGS = """
-            test
-            """;
+//    public static final String GAME_SYSTEM_SETTINGS = """
+//            test
+//            """;
 }

@@ -6,6 +6,7 @@ import com.toki.model.entity.LabelInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +16,9 @@ import java.util.List;
  */
 @Schema(description = "APP房间列表实体")
 @Data
-public class RoomItemToolResult {
+public class RoomItemToolResult implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Schema(description = "房间id")
     private Long id;

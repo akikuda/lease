@@ -23,6 +23,6 @@ public interface AiChatHistoryMapper extends BaseMapper<AiChatHistory> {
      * @param userId 用户ID
      * @return 会话ID列表
      */
-    @Select("SELECT session_key FROM ai_chat_history WHERE type = #{type} AND user_id = #{userId} ORDER BY create_time DESC")
+    @Select("SELECT session_id FROM ai_chat_history WHERE type = #{type} AND user_id = #{userId} ORDER BY create_time DESC")
     List<String> selectSessionKeysByTypeAndUserId(@Param("type") String type, @Param("userId") Long userId);
 } 

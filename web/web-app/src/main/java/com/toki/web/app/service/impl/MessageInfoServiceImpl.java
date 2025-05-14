@@ -61,12 +61,14 @@ public class MessageInfoServiceImpl extends ServiceImpl<MessageInfoMapper, Messa
      */
     @Override
     public Long unReadMsgCnt(Long userId) {
-        final ArrayList<Long> sessionUserIds = getSessionUserIds(userId);
-        // 没有关注or发过消息的任何用户，返回0
-        if (sessionUserIds.isEmpty()) {
-            return 0L;
-        }
-        return getUnReadCount(userId, sessionUserIds);
+        return 0L;
+//        final ArrayList<Long> sessionUserIds = getSessionUserIds(userId);
+////        final ArrayList<Long> sessionUserIds = new ArrayList<>();
+//        // 没有关注or发过消息的任何用户，返回0
+//        if (sessionUserIds.isEmpty()) {
+//            return 0L;
+//        }
+//        return getUnReadCount(userId, sessionUserIds);
     }
 
 //    /**

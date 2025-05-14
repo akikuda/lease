@@ -13,6 +13,7 @@ public class MessageVo {
 
     private String content;
     private String role;
+    private String sessionId;
 
     public MessageVo(Message message) {
         switch (message.getMessageType()) {
@@ -25,6 +26,8 @@ public class MessageVo {
             default:
                 this.role = "";
         }
-        this.content = message.getText();
+
+        String[] strs = message.getText().split("</think>");
+        this.content = strs.length == 2 ? strs[1] : strs[0];
     }
 }

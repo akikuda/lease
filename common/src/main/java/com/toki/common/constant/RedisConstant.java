@@ -23,9 +23,12 @@ public class RedisConstant {
     public static final String ONLINE_USERS_KEY = "onlineUsers:";
     public static final String SESSION_ID_KEY = "sessionId:";
 
-    public static final String AI_CHAT_HISTORY_ID_KEY = "aiChatHistoryId:";
+    public static final String AI_CHAT_KEY = "ai:";
+    public static final String AI_MEMORY_KEY = "ai:memory:";
+
     // Redis过期时间(7天)
-    public static final Duration AI_CHAT_HISTORY_ID_TTL = Duration.ofDays(7);
+    public static final Duration AI_CHAT_TTL = Duration.ofDays(1);
+    public static final Integer AI_MEMORY_TTL = 30;
 
     public static final Integer NULL_EXPIRE_TIME_SEC = 60 * 3;
 

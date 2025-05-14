@@ -1,7 +1,6 @@
 package com.toki.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -25,11 +24,15 @@ public class AiChatHistory extends BaseEntity {
     @TableField(value = "type")
     private String type;
 
-    @Schema(description = "会话标识")
-    @TableField(value = "session_key")
-    private String sessionKey;
+    @Schema(description = "会话ID")
+    @TableField(value = "session_id")
+    private String sessionId;
 
     @Schema(description = "用户ID")
     @TableField(value = "user_id")
     private Long userId;
+
+    @Schema(description = "会话内容")
+    @TableField(value = "content")
+    private String content;
 } 

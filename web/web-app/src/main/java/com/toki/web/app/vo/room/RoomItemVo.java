@@ -7,12 +7,15 @@ import com.toki.web.app.vo.graph.GraphVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Schema(description = "APP房间列表实体")
 @Data
-public class RoomItemVo {
+public class RoomItemVo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Schema(description = "房间id")
     private Long id;

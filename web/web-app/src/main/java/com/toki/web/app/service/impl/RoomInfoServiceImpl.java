@@ -5,6 +5,7 @@ import cn.hutool.extra.cglib.CglibUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toki.common.constant.RedisConstant;
 import com.toki.common.utils.LoginUserHolder;
 import com.toki.model.entity.*;
@@ -66,7 +67,10 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
 
         final String key = RedisConstant.APP_ROOM_PREFIX + id;
         // 查缓存
-        RoomDetailVo roomDetailVo = (RoomDetailVo) redisTemplate.opsForValue().get(key);
+        Object voTemp = redisTemplate.opsForValue().get(key);
+        ObjectMapper objectMapper = new ObjectMapper();
+        RoomDetailVo roomDetailVo = objectMapper.convertValue(voTemp, RoomDetailVo.class);
+
         // 若缓存为空，则查询数据库并缓存
         if (BeanUtil.isEmpty(roomDetailVo)) {
             //1.查询房间信息

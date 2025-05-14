@@ -29,18 +29,21 @@ public class AiChatHistoryConsumer {
     public void handleSaveChatHistory(Map<String, Object> messageMap) {
         try {
             String type = (String) messageMap.get("type");
-            String sessionKey = (String) messageMap.get("sessionKey");
+            String sessionId = (String) messageMap.get("sessionId");
             Integer userIdInt = (Integer) messageMap.get("userId");
-            final long userId = userIdInt.longValue();
+            long userId = userIdInt.longValue();
+//            String content = (String) messageMap.get("content");
 
-            log.warn("接收到AI聊天历史记录ID消息: type={}, sessionKey={}, userId={}", type, sessionKey, userId);
-            
-            // 保存会话记录
-            aiChatHistoryService.save(type, sessionKey, userId);
-            
-            log.warn("AI聊天历史记录ID保存成功");
+            log.warn("接收到AI聊天历史记录保存消息: type={}, sessionId={}, userId={}", type, sessionId, userId);
+
+            // 保存会话ID记录
+            aiChatHistoryService.save(type, sessionId, userId);
+            // 保存会话内容记录
+//            aiChatHistoryService.save(type, sessionId, userId, content);
+
+            log.warn("AI聊天历史记录 异步保存成功");
         } catch (Exception e) {
-            log.error("保存AI聊天历史记录ID失败", e);
+            log.error("AI聊天历史记录 异步保存失败", e);
         }
     }
 } 
