@@ -78,7 +78,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             if (roomInfo == null) {
                 // 缓存空值，防止缓存穿透
                 redisTemplate.opsForValue().set(key, new RoomDetailVo(), RedisConstant.NULL_EXPIRE_TIME_SEC, TimeUnit.SECONDS);
-                return null;
+                return new RoomDetailVo();
             }
             //2.查询图片
             List<GraphVo> graphVoList = graphInfoMapper.selectListByItemTypeAndId(ItemType.ROOM, id);
@@ -111,6 +111,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
 
             // 存入缓存
             redisTemplate.opsForValue().set(key, roomDetailVo);
+            log.warn("缓存未命中：房间详情  --- 缓存重建成功，房间ID：{}, 房间号：{}", id, roomDetailVo.getRoomNumber());
         }
 
         // 非AI调用时保存房间浏览记录
@@ -119,7 +120,6 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             browsingHistoryService.saveHistory(LoginUserHolder.getLoginUser().getUserId(), id);
         }
 
-        // 缓存命中直接返回
         return roomDetailVo;
     }
 }

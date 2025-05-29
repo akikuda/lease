@@ -28,7 +28,7 @@ public class RedisConstant {
 
     // Redis过期时间(7天)
     public static final Duration AI_CHAT_TTL = Duration.ofDays(1);
-    public static final Integer AI_MEMORY_TTL = 30;
+    public static final Integer AI_MEMORY_TTL = 60;
 
     public static final Integer NULL_EXPIRE_TIME_SEC = 60 * 3;
 

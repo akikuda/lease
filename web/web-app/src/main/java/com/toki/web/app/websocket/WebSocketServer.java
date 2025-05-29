@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.google.gson.JsonObject;
 import com.toki.common.exception.LeaseException;
 import com.toki.model.entity.MessageInfo;
 import com.toki.web.app.service.MessageInfoService;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.toki.common.constant.RabbitMqConstant.MESSAGE_FANOUT;
 import static com.toki.common.constant.RabbitMqConstant.MESSAGE_KEY;
@@ -54,6 +58,31 @@ public class WebSocketServer implements ApplicationContextAware {
 
     // 记录当前连接的用户, key为userId, value为WebSocket对象,线程安全
     private static final Map<Long, WebSocket> USER_MAP = new ConcurrentHashMap<>();
+
+    // 用于检测超时连接的线程池,执行延迟任务
+    private static final ScheduledExecutorService HEARTBEAT_CHECKER =
+            Executors.newSingleThreadScheduledExecutor();
+
+    // 心跳超时时间(毫秒)，应大于前端发送间隔2倍，这里设置为60秒
+    private static final long HEARTBEAT_TIMEOUT = 60000;
+
+    static {
+        // 启动定时检测任务，每30秒检测一次
+        HEARTBEAT_CHECKER.scheduleAtFixedRate(() -> {
+            long now = System.currentTimeMillis();
+            USER_MAP.forEach((id, client) -> {
+                // 如果超过心跳超时时间未收到心跳，关闭连接
+                if (now - client.getLastHeartbeatTime() > HEARTBEAT_TIMEOUT) {
+                    try {
+                        log.warn("用户{}心跳超时，关闭连接", id);
+                        client.getSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "心跳超时"));
+                    } catch (IOException e) {
+                        log.error("关闭心跳超时连接失败", e);
+                    }
+                }
+            });
+        }, 30, 30, TimeUnit.SECONDS);
+    }
 
     // @ServerEndpoint 注解的类由 WebSocket 容器管理，
     // 而不是 Spring 容器管理，因此 @Autowired 注解不会生效。
@@ -117,9 +146,12 @@ public class WebSocketServer implements ApplicationContextAware {
      **/
     @OnOpen
     public void onOpen(@PathParam("userId") Long userId, Session session) throws IOException {
+        // 初始化
         WebSocket webSocket = new WebSocket();
         webSocket.setUserId(userId);
         webSocket.setSession(session);
+        webSocket.setLastHeartbeatTime(System.currentTimeMillis());
+
         boolean containsKey = USER_MAP.containsKey(userId);
         if (!containsKey) {
             // 保存用户，方便后续发送消息给前端
@@ -128,12 +160,12 @@ public class WebSocketServer implements ApplicationContextAware {
             redisService.setUserOnline(userId);
         }
 //        if (!redisService.isUserOnline(userId)) {
-            // 利用Lua脚本保证原子性
+        // 利用Lua脚本保证原子性
 //            redisService.addLoginCountAndUserOnline(userId);
-            // 增加当前在线用户数量
+        // 增加当前在线用户数量
 //            addLoginCount();
 //            redisService.addLoginCount();
-            // 设置用户在线状态
+        // 设置用户在线状态
 //            redisService.setUserOnline(userId);
 //        }
         log.warn("连接建立成功!已连接用户: {}, 当前在线人数: {}", userId, redisService.getLoginCount());
@@ -155,8 +187,22 @@ public class WebSocketServer implements ApplicationContextAware {
         if (StrUtil.isBlank(messageInfo)) {
             return;
         }
-        // 将json字符串转为对象
-        final MessageInfo message = JSONUtil.toBean(messageInfo, MessageInfo.class);
+
+        // 处理心跳包(带有type字段且值为ping)
+        final JSONObject messageJson = JSONUtil.parseObj(messageInfo);
+        if (messageJson.containsKey("type") && "ping".equals(messageJson.getStr("type"))) {
+            // 更新指定用户的最后一次心跳时间
+            final Long userId = Long.valueOf(messageJson.getStr("userId"));
+            if (USER_MAP.containsKey(userId)) {
+                USER_MAP.get(userId).setLastHeartbeatTime(System.currentTimeMillis());
+            }
+            // 可选：回应心跳包,这里不回应
+            return;
+        }
+        // 将json对象转为MessageInfo对象
+        final MessageInfo message = messageJson.toBean(MessageInfo.class);
+
+
         // 检查消息是否已经处理过
 //        if (redisService.isMessageProcessed(message.getId())) {
 //            log.warn("消息已处理过: {}", message.getId());
@@ -169,8 +215,8 @@ public class WebSocketServer implements ApplicationContextAware {
         final Long sendUserId = message.getSendUserId();
 
         /*
-        * 批量保存消息到数据库方案，有问题，待解决
-        * */
+         * 批量保存消息到数据库方案，有问题，待解决
+         * */
 //        // 单条消息的数据校验
 //        messageService.userStatusCheck(sendUserId, receiveUserId);
 //        if (StrUtil.isBlank(message.getContent())) {
@@ -196,8 +242,8 @@ public class WebSocketServer implements ApplicationContextAware {
         // 1.判断接收者是否正在查看发送者的消息
 
         /*
-        * 单条消息保存到数据库方案
-        * */
+         * 单条消息保存到数据库方案
+         * */
         boolean isCurrentChat = messageService.isCurrentChatSession(receiveUserId, sendUserId);
         // 提前设置消息是否已读
         message.setIsRead(isCurrentChat ? READ : UNREAD);
@@ -244,6 +290,12 @@ public class WebSocketServer implements ApplicationContextAware {
 //            redisService.reduceLoginCountAndUserOffline(userId);
 //        }
         log.warn("关闭连接触发事件!已断开用户: {}, 当前在线人数: {}", userId, redisService.getLoginCount());
+
+        if(USER_MAP.isEmpty() && !HEARTBEAT_CHECKER.isShutdown()){
+            // 关闭定时检测任务
+            HEARTBEAT_CHECKER.shutdown();
+            log.info("关闭定时检测任务");
+        }
 
         MessageInfo message = new MessageInfo();
         message.setContent(userId + " 已断开");

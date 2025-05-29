@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Schema(description = "杂项费用值表")
 @TableName(value = "fee_value")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class FeeValue extends BaseEntity {
 

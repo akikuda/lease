@@ -2,12 +2,14 @@ package com.toki.web.app.vo.room;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.ai.tool.annotation.ToolParam;
 
 /**
  * 这些是查询参数，可选
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class RoomQueryToolParam extends RoomQueryVo {
 

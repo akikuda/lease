@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author toki
@@ -11,6 +12,8 @@ import lombok.Data;
 @Schema(description = "员工基本信息")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SystemUserInfoVo {
 
     @Schema(description = "用户姓名")

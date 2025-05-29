@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  */
 @Schema(description = "预约看房信息表")
 @TableName(value = "view_appointment")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ViewAppointment extends BaseEntity {
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 岗位信息表
@@ -12,6 +13,7 @@ import lombok.Data;
  * @TableName system_post
  */
 @TableName(value = "system_post")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SystemPost extends BaseEntity {
 

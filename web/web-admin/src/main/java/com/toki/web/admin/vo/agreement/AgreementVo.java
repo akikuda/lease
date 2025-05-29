@@ -3,10 +3,12 @@ package com.toki.web.admin.vo.agreement;
 import com.toki.model.entity.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "租约信息")
 public class AgreementVo extends LeaseAgreement {

@@ -46,9 +46,9 @@
                is_ai,
                create_time
         from message_info
-        where is_deleted = 0
-            and (send_user_id = #{sendUserId} and receive_user_id = #{receiveUserId})
+        where (send_user_id = #{sendUserId} and receive_user_id = #{receiveUserId})
            or (send_user_id = #{receiveUserId} and receive_user_id = #{sendUserId})
+            and is_deleted = 0
         order by create_time
         limit #{limitMsgLength}
     </select>

@@ -16,7 +16,8 @@ Ai通过异步调用Tool，在项目中需要用到ThreadLocal来传递上下文
 但在异步调用中，ThreadLocal会丢失，导致上下文信息丢失。
 比如userID无法获取
 解决：
-- 在异步调用中，将上下文信息通过参数传递给Tool。
+
+- 在异步调用中，将上下文信息通过参数传递给Tool
 - 在需要的Tool中，通过userInfoService获取用户信息。(本项目中采用)
 
 ### 待办
@@ -91,3 +92,8 @@ SSE有自动重连机制，WebSocket需手动实现
   智能客服主要需要显示AI逐字生成回复的效果
   是否需要其他复杂功能如状态同步、多端共享会话等
 ```
+### 待办
+- 在[AiChatHistoryService.java](web/web-app/src/main/java/com/toki/web/app/service/AiChatHistoryService.java)中实现AI聊天记录的持久化，然后在[AiChatRedisMemory.java](web/web-app/src/main/java/com/toki/web/app/config/AiConfig/AiChatRedisMemory.java)中调用
+  -  考虑修改实体类[AiChatHistory.java](model/src/main/java/com/toki/model/entity/AiChatHistory.java)，使其与MessageVO一致
+
+- 保存到redis的方法AiChatRedisMemory中已有，需要在AiChatHistoryService中实现保存到数据库的方法；同样，获取的方法AiChatRedisMemory中已有

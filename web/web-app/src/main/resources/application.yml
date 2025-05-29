@@ -91,6 +91,6 @@ minio:
 
 aliyun:
   sms:
-    access-key-id: LTAI5tKsEJtLgci3f4hWNuxj
-    access-key-secret: Ia7oAv39S5dBez4Q8AUstF7oueZ3rU
+    access-key-id: ${ACCESS_KEY_ID}
+    access-key-secret: ${ACCESS_KEY_SECRET}
     endpoint: dysmsapi.aliyuncs.com

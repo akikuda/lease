@@ -8,6 +8,7 @@ import lombok.*;
 
 @Schema(description = "图片信息表")
 @TableName(value = "graph_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GraphInfo extends BaseEntity {
 

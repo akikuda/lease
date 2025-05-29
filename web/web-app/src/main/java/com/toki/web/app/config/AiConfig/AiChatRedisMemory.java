@@ -1,6 +1,7 @@
 package com.toki.web.app.config.AiConfig;
 
 import cn.hutool.extra.cglib.CglibUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toki.model.entity.AiChatHistory;
 import com.toki.web.app.service.AiChatHistoryService;
@@ -41,12 +42,14 @@ public class AiChatRedisMemory implements ChatMemory {
     public void add(String conversationId, List<Message> messages) {
 
         // 从会话ID中截取出用户ID作为key
-//        String userId = conversationId.split("_")[0];
-//        String key = AI_MEMORY_KEY + userId + ":" + conversationId;
-        String key = AI_MEMORY_KEY + conversationId;
+        String userId = conversationId.split("_")[0];
+        String key = AI_MEMORY_KEY + userId + ":" + conversationId;
+//        String key = AI_MEMORY_KEY + conversationId;
 
-        // 转VO对象列表
+        // 转对象
+        // messageVoList保存到Redis
         List<MessageVo> messageVoList = new ArrayList<>();
+        // aiChatHistoryList保存到数据库
 //        List<AiChatHistory> aiChatHistoryList = new ArrayList<>();
         for (Message msg : messages) {
             MessageVo messageVo = new MessageVo(msg);
@@ -55,16 +58,15 @@ public class AiChatRedisMemory implements ChatMemory {
             messageVoList.add(messageVo);
 
             // messageVO转AiChatHistory对象，保存到数据库
-//            AiChatHistory aiChatHistory = new AiChatHistory();
+//            AiChatHistory aiChatHistory = CglibUtil.copy(messageVo, AiChatHistory.class);
 //            aiChatHistory.setType(messageVo.getRole());
-//            CglibUtil.copy(messageVo, aiChatHistory);
-//
+//            aiChatHistory.setUserId(Long.parseLong(userId));
 //            aiChatHistoryList.add(aiChatHistory);
         }
         // 使用list结构模拟队列存储消息，维护顺序
         redisTemplate.opsForList().rightPushAll(key, messageVoList.toArray());
         redisTemplate.expire(key, AI_MEMORY_TTL, TimeUnit.MINUTES);
-        // todo 同时保存到数据库,需要修改表结构(增加role字段 -> 用type字段代替)，适应messageVO对象
+        // 同时保存到数据库,用type字段代替role，适应messageVO对象
 //        aiChatHistoryService.saveBatch(aiChatHistoryList);
     }
 
@@ -73,11 +75,28 @@ public class AiChatRedisMemory implements ChatMemory {
     // 调用效果是将prompt消息拼装最近的lastN条消息，作为AI的回复
     @Override
     public List<Message> get(String conversationId, int lastN) {
-        String key = AI_MEMORY_KEY + conversationId;
+        String userId = conversationId.split("_")[0];
+        String key = AI_MEMORY_KEY + userId + ":" + conversationId;
+//        String key = AI_MEMORY_KEY + conversationId;
         Long size = redisTemplate.opsForList().size(key);
+        // 如果Redis中没有数据，则从数据库中获取历史消息，并存入Redis;若数据库也没有，返回空列表
         if (size == null || size == 0) {
-            // todo 如果Redis中没有数据，则从数据库中获取历史消息，并存入Redis;若数据库也没有，返回空列表
+//            final List<AiChatHistory> aiChatHistoryList = aiChatHistoryService.list(
+//                    new LambdaQueryWrapper<>(AiChatHistory.class)
+//                            .eq(AiChatHistory::getUserId, Long.parseLong(userId))
+//                            .eq(AiChatHistory::getSessionId, conversationId)
+//                            .orderByDesc(AiChatHistory::getCreateTime)
+//                            .last("limit " + lastN)
+//            );
+//            if (aiChatHistoryList.isEmpty()) {
+//                return Collections.emptyList();
+//            }
+
             return Collections.emptyList();
+
+
+            // 转对象
+//            return CglibUtil.copyList(aiChatHistoryList, Message.class);
         }
 
         // 从Redis中start位置开始获取消息列表，并转换为Message对象列表
@@ -103,9 +122,9 @@ public class AiChatRedisMemory implements ChatMemory {
     @Override
     public void clear(String conversationId) {
         // 从会话ID中截取出用户ID作为key
-//        String userId = conversationId.split("_")[0];
-//        String key = AI_MEMORY_KEY + userId + ":" + conversationId;
-        String key = AI_MEMORY_KEY + conversationId;
+        String userId = conversationId.split("_")[0];
+        String key = AI_MEMORY_KEY + userId + ":" + conversationId;
+//        String key = AI_MEMORY_KEY + conversationId;
         redisTemplate.delete(key);
     }
 }

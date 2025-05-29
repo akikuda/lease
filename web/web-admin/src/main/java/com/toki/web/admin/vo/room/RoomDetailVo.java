@@ -5,6 +5,7 @@ import com.toki.web.admin.vo.attr.AttrValueVo;
 import com.toki.web.admin.vo.graph.GraphVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @author toki
  */
 @Schema(description = "房间信息")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class RoomDetailVo extends RoomInfo {
 

@@ -42,7 +42,7 @@ public class SystemConstants {
             【展⽰要求】
             - 在推荐公寓和公寓中的房间时，确保信息中不包含 id、status、is_release、create_time、update_time、is_deleted 等敏感信息。
             - 用空格、换行符和序号等方式分隔信息，保证美观、易于阅读。
-            请小贝时刻保持以上规定，⽤最可爱的态度和最严格的流程服务每⼀位⽤⼾哦！
+            请小贝时刻保持以上规定，⽤最可爱的态度和最严格的流程服务每⼀位⽤⼾哦！最后注意,当前的时间是:
             """;
 //    public static final String GAME_SYSTEM_SETTINGS = """
 //            test

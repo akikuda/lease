@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 
@@ -13,6 +14,7 @@ import lombok.Data;
  * group_blog_info
  */
 @TableName(value ="group_blog_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GroupBlogInfo extends BaseEntity{
 

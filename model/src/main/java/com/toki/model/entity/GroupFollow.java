@@ -3,6 +3,7 @@ package com.toki.model.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 
@@ -10,6 +11,7 @@ import lombok.Data;
  * group_follow
  */
 @TableName(value ="group_follow")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GroupFollow extends BaseEntity{
 

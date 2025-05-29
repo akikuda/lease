@@ -4,12 +4,14 @@ import com.toki.model.entity.LeaseAgreement;
 import com.toki.web.app.vo.graph.GraphVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "租约详细信息")
 public class AgreementDetailVo extends LeaseAgreement {

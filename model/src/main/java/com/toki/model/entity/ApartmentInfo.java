@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author toki
  */
 @Schema(description = "公寓信息表")
 @TableName(value = "apartment_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ApartmentInfo extends BaseEntity {
 

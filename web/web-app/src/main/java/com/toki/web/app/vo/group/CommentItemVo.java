@@ -3,12 +3,14 @@ package com.toki.web.app.vo.group;
 import com.toki.model.entity.GroupBlogComments;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CommentItemVo extends GroupBlogComments {
     /**

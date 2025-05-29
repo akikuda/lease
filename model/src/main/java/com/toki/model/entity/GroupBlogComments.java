@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author toki
  */
 @TableName(value ="group_blog_comments")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class GroupBlogComments extends BaseEntity{
 

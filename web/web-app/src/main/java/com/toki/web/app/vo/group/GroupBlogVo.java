@@ -3,16 +3,14 @@ package com.toki.web.app.vo.group;
 import com.toki.model.entity.GroupBlogInfo;
 import com.toki.web.app.vo.graph.GraphVo;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 /**
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "博文信息")
 @AllArgsConstructor

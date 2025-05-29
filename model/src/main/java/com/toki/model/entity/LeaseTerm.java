@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @TableName lease_term
  */
 @TableName(value = "lease_term")
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "租期信息")
 public class LeaseTerm extends BaseEntity {

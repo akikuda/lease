@@ -6,12 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author toki
  */
 @Schema(description = "用户信息表")
 @TableName(value = "user_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class UserInfo extends BaseEntity {
 

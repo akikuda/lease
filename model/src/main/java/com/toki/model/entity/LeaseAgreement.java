@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.Date;
  */
 @Schema(description = "租约信息表")
 @TableName(value = "lease_agreement")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class LeaseAgreement extends BaseEntity {
 

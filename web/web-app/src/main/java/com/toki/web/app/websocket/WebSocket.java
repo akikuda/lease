@@ -11,4 +11,7 @@ public class WebSocket {
 
     private Session session;
     private Long userId;
+
+    // 最后一次心跳时间
+    private long lastHeartbeatTime;
 }

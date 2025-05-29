@@ -6,6 +6,7 @@ import com.toki.model.entity.LabelInfo;
 import com.toki.web.app.vo.graph.GraphVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "APP端公寓信息详情")
 public class ApartmentDetailTool extends ApartmentInfo {

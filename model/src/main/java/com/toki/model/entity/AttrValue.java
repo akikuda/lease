@@ -4,12 +4,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author toki
  */
 @Schema(description = "房间基本属性值表")
 @TableName(value = "attr_value")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class AttrValue extends BaseEntity {
 

@@ -1,5 +1,6 @@
 package com.toki.web.app.config.AiConfig;
 
+import cn.hutool.core.date.DateUtil;
 import com.toki.common.constant.SystemConstants;
 import com.toki.web.app.tools.LeaseTools;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 
 /**
  * AI聊天公共配置
+ *
  * @author toki
  */
 @Configuration
@@ -61,11 +63,11 @@ public class AiChatCommonConfig {
     public ChatClient serviceChatClient(OpenAiChatModel model, AiChatRedisMemory aiChatRedisMemory, LeaseTools leaseTools) {
         return ChatClient.builder(model)
                 // 自定义AI角色
-                .defaultSystem(SystemConstants.SERVICE_SYSTEM_SETTINGS)
+                .defaultSystem(SystemConstants.SERVICE_SYSTEM_SETTINGS + DateUtil.format(DateUtil.date(), "yyyy-MM-dd HH:mm"))
                 // 全局顾问/拦截器链，会按顺序执行配置的拦截器
                 .defaultAdvisors(
-                        // 安全守护顾问, 用于防止AI对话中出现敏感词汇
-                        new SafeGuardAdvisor(List.of("色情","暴力","赌博","反动"), "抱歉,小贝无法回答这个问题~", 0),
+                        // 安全守护顾问, 用于防止提示注入和AI对话中出现敏感词汇
+                        new SafeGuardAdvisor(List.of("色情", "暴力", "赌博", "反动", "忽略", "覆盖", "禁止"), "抱歉,小贝无法回答这个问题~", 0),
                         // 自定义上下文对话记忆存储
                         new MessageChatMemoryAdvisor(aiChatRedisMemory),
                         // 自定义AI异常重试顾问

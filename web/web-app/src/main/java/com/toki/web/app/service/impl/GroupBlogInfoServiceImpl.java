@@ -85,14 +85,19 @@ public class GroupBlogInfoServiceImpl extends ServiceImpl<GroupBlogInfoMapper, G
 //            log.info("图集存入数据库成功 图集列表：{}", graphInfoList);
         }
 
+        // 博主发送博文，粉丝接收到博文的功能：
+        // feed推模式，又称写扩散模式，这里是发布博文时，将博文id推送给粉丝的收件箱key
+        // 利用redis的ZSet或list结构集合实现，又因为数据更新频繁，故采用ZSet，用时间戳作为分数用于排序
+        // 还需实现粉丝接收的功能，因为前端没有实现用户的关注人列表的博文查询的页面，故暂时不实现
+
         // 推送给粉丝
-        final List<GroupFollow> fans = groupFollowService.query().eq("follow_user_id", userId).list();
-        // 推送博文ID到粉丝
-        for (GroupFollow fan : fans) {
-            String key = FEED_KEY + fan.getUserId();
-            // 推送,key为粉丝id，value为笔记id，score为时间戳用于排序
-            stringRedisTemplate.opsForZSet().add(key, blogVo.getId().toString(), System.currentTimeMillis());
-        }
+//        final List<GroupFollow> fans = groupFollowService.query().eq("follow_user_id", userId).list();
+//        // 推送博文ID到粉丝（保存博文ID到redis的ZSet集合，以时间戳作为分数用于排序）
+//        for (GroupFollow fan : fans) {
+//            String key = FEED_KEY + fan.getUserId();
+//            // 推送,key为粉丝id，value为笔记id，score为时间戳用于排序
+//            stringRedisTemplate.opsForZSet().add(key, blogVo.getId().toString(), System.currentTimeMillis());
+//        }
 
         return true;
     }

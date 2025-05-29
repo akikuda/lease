@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
  */
 @Schema(description = "房间信息表")
 @TableName(value = "room_info")
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class RoomInfo extends BaseEntity {
 

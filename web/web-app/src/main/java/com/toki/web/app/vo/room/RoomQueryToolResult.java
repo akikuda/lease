@@ -5,6 +5,7 @@ import com.toki.web.app.vo.attr.AttrValueVo;
 import com.toki.web.app.vo.fee.FeeValueVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * 这些是要查出来的结果，都是可选的,与RoomDetailVo不同的是没有图片列表
  * @author toki
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class RoomQueryToolResult extends RoomItemVo {
     @Schema(description = "房间所属公寓信息")
