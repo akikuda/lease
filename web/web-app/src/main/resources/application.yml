@@ -7,8 +7,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://192.168.122.101:3306/lease?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
-    username: root
-    password: 123456
+    username: root # 换成你自己的用户名，上面的url地址和库名也要改成自己的
+    password: 123456 # 换成你自己的密码
     hikari:
       connection-test-query: SELECT 1 # 自动检测连接
       connection-timeout: 60000 #数据库连接超时时间,默认30秒
@@ -19,20 +19,20 @@ spring:
       pool-name: SPHHikariPool # 连接池名称
   data:
     redis:
-      host: 192.168.122.101
+      host: 192.168.122.101 # Redis服务器地址，换成你自己的Redis地址
       port: 6379
       database: 0
-      password: toki123456
+      password: toki123456 # Redis服务器密码，换成你自己的密码
   ai:
     dashscope:
-      api-key: ${DASHSCOPE_API_KEY}
+      api-key: ${DASHSCOPE_API_KEY} # 换成自己的API_KEY
       base-url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
       chat:
         options:
           model: qwen-max
       read-timeout: 300000 # 读取超时时间
     openai:
-      api-key: ${DASHSCOPE_API_KEY}
+      api-key: ${DASHSCOPE_API_KEY} # 换成自己的API_KEY
       base-url: "https://dashscope.aliyuncs.com/compatible-mode"
       chat:
         options:
@@ -44,11 +44,11 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
   rabbitmq:
-    host: 192.168.122.101 # 你的虚拟机IP
+    host: 192.168.122.101 # 换成你的Rabbitmq地址
     port: 5672 # 端口
     virtual-host: /lease # 虚拟主机,在Rabbitmq控制台创建
-    username: toki # 用户名
-    password: 123456 # 密码
+    username: toki # 用户名，换成你自己的用户名
+    password: 123456 # 密码，换成你自己的密码
     connection-timeout: 1s # 设置MQ的连接超时时间
     # 生产者
     template:
@@ -84,13 +84,13 @@ springdoc:
   default-flat-param-object: true
 
 minio:
-  endpoint: http://192.168.122.101:8000
-  access-key: admin
-  secret-key: admin123
-  bucket-name: lease-app-group
+  endpoint: http://192.168.122.101:8000 # 换成自己的Minio地址
+  access-key: admin # 换成自己的access-key
+  secret-key: admin123 # 换成自己的secret-key
+  bucket-name: lease-app-group # MinIO桶名，换成你自己的桶名
 
 aliyun:
   sms:
-    access-key-id: ${ACCESS_KEY_ID}
-    access-key-secret: ${ACCESS_KEY_SECRET}
+    access-key-id: ${ACCESS_KEY_ID} # 换成自己的access-key-id
+    access-key-secret: ${ACCESS_KEY_SECRET} # 换成自己的access-key-secret
     endpoint: dysmsapi.aliyuncs.com
